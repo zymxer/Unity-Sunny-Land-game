@@ -9,15 +9,14 @@ public class Timer
     private bool _isActive;
     private bool _isContinuous;
     
-    public Timer(float startValue, bool isContinuous, TimersController controller)
+    public Timer(float startValue, bool isContinuous)
     {
         _value = startValue;
         _lastValue = startValue;
         _isActive = false;
         _isContinuous = isContinuous;
-        controller.AddTimer(this);
+        TimersController.FindController().AddTimer(this);
     }
-
     public float GetValue()
     {
         return _value;
@@ -75,9 +74,13 @@ public class Timer
         _isActive = true;
     }
 
-    public void StartTimer()
+    public void Activate()
     {
         _isActive = true;
     }
 
+    public void Remove()
+    {
+        TimersController.FindController().RemoveTimer(this);
+    }
 }

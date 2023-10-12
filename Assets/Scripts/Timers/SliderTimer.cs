@@ -7,7 +7,6 @@ public class SliderTimer : MonoBehaviour
 {
     [SerializeField] private float value;
     [SerializeField] private bool isContinuous;
-    [SerializeField] private TimersController timersController;
     private Slider _slider;
     private Timer _timer;
     
@@ -18,7 +17,7 @@ public class SliderTimer : MonoBehaviour
         _slider.maxValue = value;
         _slider.value = value;
 
-        _timer = new Timer(value, isContinuous, timersController);
+        _timer = new Timer(value, isContinuous);
     }
     
     void Update()
@@ -71,8 +70,8 @@ public class SliderTimer : MonoBehaviour
         _timer.Continue();
     }
 
-    public void StartTimer()
+    public void Activate()
     {
-        _timer.StartTimer();
+        _timer.Activate();
     }
 }

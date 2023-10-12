@@ -16,6 +16,11 @@ public class TimersController : MonoBehaviour
     {
         _timersList.Add(timer);
     }
+
+    public void RemoveTimer(Timer timer) 
+    {
+        _timersList.Remove(timer);
+    }
     
     void Update()
     {
@@ -47,6 +52,11 @@ public class TimersController : MonoBehaviour
                 }
             }
         }
+    }
+
+    public static TimersController FindController()
+    {
+        return GameObject.Find("TimersController").GetComponent<TimersController>();
     }
     
 }

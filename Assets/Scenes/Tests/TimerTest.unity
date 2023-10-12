@@ -333,50 +333,6 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 93783152}
   m_CullTransparentMesh: 1
---- !u!1 &123921917
-GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 123921919}
-  - component: {fileID: 123921918}
-  m_Layer: 0
-  m_Name: TimersController
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!114 &123921918
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 123921917}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 5d7e5c4bd0d06724b9a611776ac5245e, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
---- !u!4 &123921919
-Transform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 123921917}
-  serializedVersion: 2
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 1195.0802, y: 858.7967, z: -3.5440674}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_ConstrainProportionsScale: 0
-  m_Children: []
-  m_Father: {fileID: 0}
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &191679599
 GameObject:
   m_ObjectHideFlags: 0
@@ -1110,7 +1066,7 @@ MonoBehaviour:
       m_Calls:
       - m_Target: {fileID: 1270804062}
         m_TargetAssemblyTypeName: SliderTimer, Assembly-CSharp
-        m_MethodName: StartTimer
+        m_MethodName: Activate
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
@@ -1585,7 +1541,7 @@ MonoBehaviour:
       m_Calls:
       - m_Target: {fileID: 2008195667}
         m_TargetAssemblyTypeName: SliderTimer, Assembly-CSharp
-        m_MethodName: StartTimer
+        m_MethodName: Activate
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
@@ -2140,7 +2096,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   value: 5
   isContinuous: 1
-  timersController: {fileID: 123921918}
 --- !u!114 &1270804063
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -3651,7 +3606,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   value: 3
   isContinuous: 1
-  timersController: {fileID: 123921918}
 --- !u!114 &2008195668
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -4038,6 +3992,63 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1001 &7269160306584707240
+PrefabInstance:
+  m_ObjectHideFlags: 0
+  serializedVersion: 2
+  m_Modification:
+    serializedVersion: 3
+    m_TransformParent: {fileID: 0}
+    m_Modifications:
+    - target: {fileID: 5894129402754552135, guid: 71b34151220dbdf44bf71740843fc22b, type: 3}
+      propertyPath: m_LocalPosition.x
+      value: 1195.0802
+      objectReference: {fileID: 0}
+    - target: {fileID: 5894129402754552135, guid: 71b34151220dbdf44bf71740843fc22b, type: 3}
+      propertyPath: m_LocalPosition.y
+      value: 858.7967
+      objectReference: {fileID: 0}
+    - target: {fileID: 5894129402754552135, guid: 71b34151220dbdf44bf71740843fc22b, type: 3}
+      propertyPath: m_LocalPosition.z
+      value: -3.5440674
+      objectReference: {fileID: 0}
+    - target: {fileID: 5894129402754552135, guid: 71b34151220dbdf44bf71740843fc22b, type: 3}
+      propertyPath: m_LocalRotation.w
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 5894129402754552135, guid: 71b34151220dbdf44bf71740843fc22b, type: 3}
+      propertyPath: m_LocalRotation.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5894129402754552135, guid: 71b34151220dbdf44bf71740843fc22b, type: 3}
+      propertyPath: m_LocalRotation.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5894129402754552135, guid: 71b34151220dbdf44bf71740843fc22b, type: 3}
+      propertyPath: m_LocalRotation.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5894129402754552135, guid: 71b34151220dbdf44bf71740843fc22b, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5894129402754552135, guid: 71b34151220dbdf44bf71740843fc22b, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5894129402754552135, guid: 71b34151220dbdf44bf71740843fc22b, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 7750139102899884367, guid: 71b34151220dbdf44bf71740843fc22b, type: 3}
+      propertyPath: m_Name
+      value: TimersController
+      objectReference: {fileID: 0}
+    m_RemovedComponents: []
+    m_RemovedGameObjects: []
+    m_AddedGameObjects: []
+    m_AddedComponents: []
+  m_SourcePrefab: {fileID: 100100000, guid: 71b34151220dbdf44bf71740843fc22b, type: 3}
 --- !u!1660057539 &9223372036854775807
 SceneRoots:
   m_ObjectHideFlags: 0
@@ -4045,4 +4056,4 @@ SceneRoots:
   - {fileID: 1354322249}
   - {fileID: 256208237}
   - {fileID: 2132088004}
-  - {fileID: 123921919}
+  - {fileID: 7269160306584707240}
