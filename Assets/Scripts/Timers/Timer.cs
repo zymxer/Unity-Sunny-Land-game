@@ -15,7 +15,7 @@ public class Timer
         _lastValue = startValue;
         _isActive = false;
         _isContinuous = isContinuous;
-        TimersController.FindController().AddTimer(this);
+        TimersController.GetController().AddTimer(this);
     }
     public float GetValue()
     {
@@ -81,6 +81,6 @@ public class Timer
 
     public void Remove()
     {
-        TimersController.FindController().RemoveTimer(this);
+        TimersController.GetController().RemoveTimer(this);
     }
 }

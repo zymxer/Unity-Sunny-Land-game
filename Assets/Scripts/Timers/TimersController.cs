@@ -6,7 +6,12 @@ using UnityEngine.Video;
 public class TimersController : MonoBehaviour
 {
     private readonly ArrayList _timersList = new ArrayList();
+    private static TimersController instance;
 
+    private void Start()
+    {
+        instance = this;
+    }
     public ArrayList GetTimersList()
     {
         return _timersList;
@@ -54,9 +59,9 @@ public class TimersController : MonoBehaviour
         }
     }
 
-    public static TimersController FindController()
+    public static TimersController GetController()
     {
-        return GameObject.Find("TimersController").GetComponent<TimersController>();
+        return instance;
     }
     
 }
