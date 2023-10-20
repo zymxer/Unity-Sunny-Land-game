@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Events;
 
 public class Timer
 {
@@ -8,7 +9,10 @@ public class Timer
     private float _lastValue;
     private bool _isActive;
     private bool _isContinuous;
-    
+    private UnityEvent _onStart = new UnityEvent();
+    private UnityEvent _onValueChanged = new UnityEvent();
+    private UnityEvent _onEnd = new UnityEvent();
+
     public Timer(float startValue, bool isContinuous)
     {
         _value = startValue;
@@ -20,6 +24,19 @@ public class Timer
     public float GetValue()
     {
         return _value;
+    }
+
+    public UnityEvent OnStart()
+    {
+        return _onStart;
+    }
+    public UnityEvent OnValueChanged()
+    {
+        return _onValueChanged;
+    }
+    public UnityEvent OnEnd()
+    {
+        return _onEnd;
     }
 
     public void SetValue(float newValue)
@@ -69,18 +86,23 @@ public class Timer
         _isActive = false;
     }
 
-    public void Continue()
+    public void Continue() //Doesn't invoke OnStart
     {
         _isActive = true;
     }
 
-    public void Activate()
+    public void Activate() //Invokes OnStart
     {
         _isActive = true;
+        _onStart.Invoke();
     }
 
     public void Remove()
     {
+        _onStart.RemoveAllListeners();
+        _onValueChanged.RemoveAllListeners();
+        _onEnd.RemoveAllListeners();
         TimersController.GetController().RemoveTimer(this);
     }
+
 }

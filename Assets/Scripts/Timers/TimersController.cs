@@ -8,7 +8,7 @@ public class TimersController : MonoBehaviour
     private readonly ArrayList _timersList = new ArrayList();
     private static TimersController instance;
 
-    private void Start()
+    private void Awake()
     {
         instance = this;
     }
@@ -45,8 +45,10 @@ public class TimersController : MonoBehaviour
         if (timer.IsActive())
         {
             timer.SetValue(timer.GetValue() - Time.deltaTime);
+            timer.OnValueChanged().Invoke();
             if (timer.GetValue() <= 0f)
             {
+                timer.OnEnd().Invoke();
                 if (timer.IsContinuous())
                 {
                     timer.Restart();

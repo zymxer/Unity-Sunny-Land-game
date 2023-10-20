@@ -16,7 +16,6 @@ public class SliderTimer : MonoBehaviour
         _slider.minValue = 0f;
         _slider.maxValue = value;
         _slider.value = value;
-
         _timer = new Timer(value, isContinuous);
     }
     
