@@ -62,4 +62,9 @@ public class PlayerController : MonoBehaviour
         }
     }
 
+    public void Test()
+    {
+        Debug.Log("Test Successful");
+    }
+
 }

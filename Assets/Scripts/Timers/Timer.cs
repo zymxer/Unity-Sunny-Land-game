@@ -3,24 +3,30 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Events;
 
-public class Timer
+public class Timer : MonoBehaviour
 {
+    [SerializeField]
     private float _value;
-    private float _lastValue;
+    [SerializeField]
     private bool _isActive;
+    [SerializeField]
     private bool _isContinuous;
+    [Space]
+    [SerializeField]
     private UnityEvent _onStart = new UnityEvent();
+    [SerializeField]
     private UnityEvent _onValueChanged = new UnityEvent();
+    [SerializeField]
     private UnityEvent _onEnd = new UnityEvent();
 
-    public Timer(float startValue, bool isContinuous)
+    private float _lastValue;
+
+    private void Start()
     {
-        _value = startValue;
-        _lastValue = startValue;
-        _isActive = false;
-        _isContinuous = isContinuous;
+        _lastValue = _value;
         TimersController.GetController().AddTimer(this);
     }
+
     public float GetValue()
     {
         return _value;

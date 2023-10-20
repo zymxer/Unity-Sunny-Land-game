@@ -3,20 +3,20 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 
+[RequireComponent(typeof(Timer))]
 public class SliderTimer : MonoBehaviour
 {
-    [SerializeField] private float value;
-    [SerializeField] private bool isContinuous;
+
     private Slider _slider;
     private Timer _timer;
     
     void Start()
     {
-        _slider = gameObject.GetComponent<Slider>();
+        _timer = GetComponent<Timer>();
+        _slider = GetComponent<Slider>();
         _slider.minValue = 0f;
-        _slider.maxValue = value;
-        _slider.value = value;
-        _timer = new Timer(value, isContinuous);
+        _slider.maxValue = _timer.GetValue();
+        _slider.value = _timer.GetValue();
     }
     
     void Update()
