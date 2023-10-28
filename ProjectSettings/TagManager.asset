@@ -3,7 +3,8 @@
 --- !u!78 &1
 TagManager:
   serializedVersion: 2
-  tags: []
+  tags:
+  - Bonus
   layers:
   - Default
   - TransparentFX
@@ -40,4 +41,22 @@ TagManager:
   m_SortingLayers:
   - name: Default
     uniqueID: 0
+    locked: 0
+  - name: Background
+    uniqueID: 2815505815
+    locked: 0
+  - name: Tilemap
+    uniqueID: 1044225955
+    locked: 0
+  - name: Props
+    uniqueID: 2681458709
+    locked: 0
+  - name: Platforms
+    uniqueID: 3811154049
+    locked: 0
+  - name: Player & Enemies
+    uniqueID: 254410229
+    locked: 0
+  - name: Foreground
+    uniqueID: 836440265
     locked: 0

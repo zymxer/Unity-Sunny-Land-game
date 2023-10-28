@@ -49,7 +49,7 @@ public class SliderTimer : MonoBehaviour
     
     public void Reset()
     {
-        _timer.Reset();
+        _timer.ResetTimer();
         _slider.value = _timer.GetValue();
     }
 

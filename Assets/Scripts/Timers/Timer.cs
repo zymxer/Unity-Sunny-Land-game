@@ -19,17 +19,40 @@ public class Timer : MonoBehaviour
     [SerializeField]
     private UnityEvent _onEnd = new UnityEvent();
 
-    private float _lastValue;
+    private float _startValue;
+    private float _prevoiosValue;
+    private float _delta;
 
     private void Start()
     {
-        _lastValue = _value;
+        _startValue = _value;
         TimersController.GetController().AddTimer(this);
     }
 
     public float GetValue()
     {
         return _value;
+    }
+
+    public float TimePast()
+    {
+        return _startValue - _value;
+    }
+
+    public float TimePastPercent()
+    {
+        return (_startValue - _value) / _startValue;
+    }
+
+    public float GetDelta()
+    {
+        return _delta;
+    }
+
+    public void UpdateDelta()
+    {
+        _delta = _prevoiosValue - _value;
+        _prevoiosValue = _value;
     }
 
     public UnityEvent OnStart()
@@ -72,24 +95,29 @@ public class Timer : MonoBehaviour
 
     public void ResetValue(float newValue)
     {
-        _lastValue = newValue;
+        _startValue = newValue;
     }
     
-    public void Reset()
+    public void ResetTimer()
     {
-        _value = _lastValue;
+        _value = _startValue;
         _isActive = false;
     }
 
     public void Restart()
     {
-        _value = _lastValue;
+        _value = _startValue;
         _isActive = true;
     }
 
     public void Stop()
     {
         _isActive = false;
+    }
+
+    public void End()
+    {
+        _value = -1f;
     }
 
     public void Continue() //Doesn't invoke OnStart

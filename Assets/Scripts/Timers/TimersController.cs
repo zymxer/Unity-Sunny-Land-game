@@ -6,11 +6,14 @@ using UnityEngine.Video;
 public class TimersController : MonoBehaviour
 {
     private readonly ArrayList _timersList = new ArrayList();
-    private static TimersController instance;
+    private static TimersController instance = null;
 
     private void Awake()
     {
-        instance = this;
+        if(instance == null)
+        {
+            instance = this;
+        }
     }
     public ArrayList GetTimersList()
     {
@@ -45,7 +48,7 @@ public class TimersController : MonoBehaviour
         if (timer.IsActive())
         {
             timer.SetValue(timer.GetValue() - Time.deltaTime);
-            timer.OnValueChanged().Invoke();
+            timer.UpdateDelta();
             if (timer.GetValue() <= 0f)
             {
                 timer.OnEnd().Invoke();
@@ -55,9 +58,10 @@ public class TimersController : MonoBehaviour
                 }
                 else
                 {
-                    timer.Reset();   
+                    timer.ResetTimer();   
                 }
             }
+            timer.OnValueChanged().Invoke();
         }
     }
 
