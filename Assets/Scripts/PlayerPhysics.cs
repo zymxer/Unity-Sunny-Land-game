@@ -27,6 +27,7 @@ public class PlayerPhysics : MonoBehaviour
     public LayerMask groundLayer;
     private PlayerGraphics _playerGraphics;
     private float jumpTimeMult;
+    private MovingPlatform _movingPlatform;
 
     void Start()
     {
@@ -83,6 +84,11 @@ public class PlayerPhysics : MonoBehaviour
         {
             StartJump();
         }
+
+        if(_movingPlatform != null)
+        {
+            MoveWithPlatform();
+        }
         Debug.DrawRay(transform.position, Vector3.down * rayLength, Color.white);
     }
 
@@ -132,5 +138,21 @@ public class PlayerPhysics : MonoBehaviour
             Debug.Log("Score + 5");
             collision.gameObject.SetActive(false);
         }
+        if(collision.CompareTag("PlatformTop"))
+        {
+            _movingPlatform = collision.gameObject.transform.parent.gameObject.GetComponent<MovingPlatform>();
+        }
+    }
+    private void OnTriggerExit2D(Collider2D collision)
+    {
+        if (collision.CompareTag("PlatformTop"))
+        {
+            _movingPlatform = null;
+        }
+    }
+
+    private void MoveWithPlatform()
+    {
+        transform.Translate(_movingPlatform.DeltaX(), _movingPlatform.DeltaY(), 0.0f);
     }
 }
