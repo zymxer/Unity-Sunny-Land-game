@@ -6,137 +6,142 @@ using UnityEngine.Events;
 public class Timer : MonoBehaviour
 {
     [SerializeField]
-    private float _value;
+    private float value;
     [SerializeField]
-    private bool _isActive;
+    private bool isActive;
     [SerializeField]
-    private bool _isContinuous;
+    private bool isContinuous;
     [Space]
     [SerializeField]
-    private UnityEvent _onStart = new UnityEvent();
+    private UnityEvent onStart = new UnityEvent();
     [SerializeField]
-    private UnityEvent _onValueChanged = new UnityEvent();
+    private UnityEvent onValueChanged = new UnityEvent();
     [SerializeField]
-    private UnityEvent _onEnd = new UnityEvent();
+    private UnityEvent onEnd = new UnityEvent();
 
-    private float _startValue;
-    private float _prevoiosValue;
-    private float _delta;
+    private float startValue;
+    private float prevoiosValue;
+    private float delta;
+    private bool toDelete = false;
 
     private void Start()
     {
-        _startValue = _value;
+        startValue = value;
         TimersController.GetController().AddTimer(this);
     }
 
     public float GetValue()
     {
-        return _value;
+        return value;
     }
 
     public float TimePast()
     {
-        return _startValue - _value;
+        return startValue - value;
     }
 
     public float TimePastPercent()
     {
-        return (_startValue - _value) / _startValue;
+        return (startValue - value) / startValue;
     }
 
     public float GetDelta()
     {
-        return _delta;
+        return delta;
     }
 
     public void UpdateDelta()
     {
-        _delta = _prevoiosValue - _value;
-        _prevoiosValue = _value;
+        delta = prevoiosValue - value;
+        prevoiosValue = value;
     }
 
     public UnityEvent OnStart()
     {
-        return _onStart;
+        return onStart;
     }
     public UnityEvent OnValueChanged()
     {
-        return _onValueChanged;
+        return onValueChanged;
     }
     public UnityEvent OnEnd()
     {
-        return _onEnd;
+        return onEnd;
     }
 
     public void SetValue(float newValue)
     {
-        _value = newValue;
+        value = newValue;
     }
 
     public bool IsActive()
     {
-        return _isActive;
+        return isActive;
     }
     
     public void SetActive(bool isActive)
     {
-        _isActive = isActive;
+        this.isActive = isActive;
     }
 
     public bool IsContinuous()
     {
-        return _isContinuous;
+        return isContinuous;
     }
 
     public void SetContinuous(bool isContinuous)
     {
-        _isContinuous = isContinuous;
+        this.isContinuous = isContinuous;
     }
 
     public void ResetValue(float newValue)
     {
-        _startValue = newValue;
+        startValue = newValue;
+        value = newValue;
     }
     
     public void ResetTimer()
     {
-        _value = _startValue;
-        _isActive = false;
+        value = startValue;
+        isActive = false;
     }
 
     public void Restart()
     {
-        _value = _startValue;
-        _isActive = true;
+        value = startValue;
+        isActive = true;
     }
 
     public void Stop()
     {
-        _isActive = false;
+        isActive = false;
     }
 
     public void End()
     {
-        _value = -1f;
+        value = -1f;
     }
 
     public void Continue() //Doesn't invoke OnStart
     {
-        _isActive = true;
+        isActive = true;
     }
 
     public void Activate() //Invokes OnStart
     {
-        _isActive = true;
-        _onStart.Invoke();
+        isActive = true;
+        onStart.Invoke();
     }
+
 
     public void Remove()
     {
-        _onStart.RemoveAllListeners();
-        _onValueChanged.RemoveAllListeners();
-        _onEnd.RemoveAllListeners();
-        TimersController.GetController().RemoveTimer(this);
+        toDelete = true;
+    }
+
+    public bool ToDelete()
+    {
+        return toDelete;
     }
 
 }

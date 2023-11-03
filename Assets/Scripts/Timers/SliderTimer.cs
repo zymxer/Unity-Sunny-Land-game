@@ -7,70 +7,70 @@ using UnityEngine.UI;
 public class SliderTimer : MonoBehaviour
 {
 
-    private Slider _slider;
-    private Timer _timer;
+    private Slider slider;
+    private Timer timer;
     
     void Start()
     {
-        _timer = GetComponent<Timer>();
-        _slider = GetComponent<Slider>();
-        _slider.minValue = 0f;
-        _slider.maxValue = _timer.GetValue();
-        _slider.value = _timer.GetValue();
+        timer = GetComponent<Timer>();
+        slider = GetComponent<Slider>();
+        slider.minValue = 0f;
+        slider.maxValue = timer.GetValue();
+        slider.value = timer.GetValue();
     }
     
     void Update()
     {
-        if (_timer.IsActive())
+        if (timer.IsActive())
         {
-            _slider.value = _timer.GetValue();
+            slider.value = timer.GetValue();
         }
     }
     
     public Slider GetSlider()
     {
-        return _slider;
+        return slider;
     }
 
     public Timer GetTimer()
     {
-        return _timer;
+        return timer;
     }
 
     public void SetContinuous(bool newContinuous)
     {
-        _timer.SetContinuous(newContinuous);
+        timer.SetContinuous(newContinuous);
     }
 
     public void ResetContinuous()
     {
-        _timer.SetContinuous(!_timer.IsContinuous());
+        timer.SetContinuous(!timer.IsContinuous());
     }
     
     public void Reset()
     {
-        _timer.ResetTimer();
-        _slider.value = _timer.GetValue();
+        timer.ResetTimer();
+        slider.value = timer.GetValue();
     }
 
     public void Restart()
     {
-        _timer.Restart();
-        _slider.value = _timer.GetValue();
+        timer.Restart();
+        slider.value = timer.GetValue();
     }
 
     public void Stop()
     {
-        _timer.Stop();
+        timer.Stop();
     }
 
     public void Continue()
     {
-        _timer.Continue();
+        timer.Continue();
     }
 
     public void Activate()
     {
-        _timer.Activate();
+        timer.Activate();
     }
 }

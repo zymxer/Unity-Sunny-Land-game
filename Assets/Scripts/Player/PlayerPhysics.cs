@@ -18,40 +18,55 @@ public class PlayerPhysics : MonoBehaviour
     private float rayLength = 2.0f;
 
     [SerializeField]
-    private Timer _jumpTimer;
+    private Timer jumpTimer;
 
     private Rigidbody2D _rigidbody;
-    private bool _isWalking = false;
-    private bool _isFacingRight = true;
-    private Vector3 _scale;
+    private bool isWalking = false;
+    private bool isFacingRight = true;
+    private Vector3 scale;
     public LayerMask groundLayer;
-    private PlayerGraphics _playerGraphics;
+    private PlayerGraphics playerGraphics;
     private float jumpTimeMult;
-    private MovingPlatform _movingPlatform;
+    private MovingPlatform movingPlatform;
+
+    private float movingPlatformSpeedX;
+    private bool wasOnPlatform = false;
+
+    private bool isGrounded = false;
 
     void Start()
     {
-        _scale = transform.localScale;
+        scale = transform.localScale;
         _rigidbody = GetComponent<Rigidbody2D>();
-        _jumpTimer = GetComponent<Timer>();
-        _jumpTimer.OnEnd().AddListener(AddJumpForce);
-        _jumpTimer.OnValueChanged().AddListener(UpdateJumpTimeMult);
-        _playerGraphics = GetComponent<PlayerGraphics>();
+        jumpTimer = GetComponent<Timer>();
+        jumpTimer.OnEnd().AddListener(AddJumpForce);
+        jumpTimer.OnValueChanged().AddListener(UpdateJumpTimeMult);
+        playerGraphics = GetComponent<PlayerGraphics>();
     }
 
 
     void Update()
     {
+        if(CheckGrounded())
+        {
+            isGrounded = true;
+        }
+        else
+        {
+            isGrounded = false;
+        }
+
+
         if (Input.GetKeyDown(KeyCode.RightArrow) || Input.GetKeyDown(KeyCode.D))
         {
-            if (!_isFacingRight)
+            if (!isFacingRight)
             {
                 Rotate();
             }
         }
         if (Input.GetKeyDown(KeyCode.LeftArrow) || Input.GetKeyDown(KeyCode.A))
         {
-            if (_isFacingRight)
+            if (isFacingRight)
             {
                 Rotate();
             }
@@ -59,21 +74,21 @@ public class PlayerPhysics : MonoBehaviour
 
         if (Input.GetKey(KeyCode.RightArrow) || Input.GetKey(KeyCode.D))
         {
-            _isWalking = true;
-            _playerGraphics.SetWalking(true);
+            isWalking = true;
+            playerGraphics.SetWalking(true);
             transform.Translate(moveSpeed * Time.deltaTime, 0.0f, 0.0f, Space.World);
         }
         if (Input.GetKey(KeyCode.LeftArrow) || Input.GetKey(KeyCode.A))
         {
-            _isWalking = true;
-            _playerGraphics.SetWalking(true);
+            isWalking = true;
+            playerGraphics.SetWalking(true);
             transform.Translate(-moveSpeed * Time.deltaTime, 0.0f, 0.0f, Space.World);
         }
 
         if (Input.GetKeyUp(KeyCode.RightArrow) || Input.GetKeyUp(KeyCode.D) || Input.GetKeyUp(KeyCode.LeftArrow) || Input.GetKeyUp(KeyCode.A))
         {
-            _isWalking = false;
-            _playerGraphics.SetWalking(false);
+            isWalking = false;
+            playerGraphics.SetWalking(false);
         }
         if (Input.GetKeyUp(KeyCode.Space))
         {
@@ -85,31 +100,48 @@ public class PlayerPhysics : MonoBehaviour
             StartJump();
         }
 
-        if(_movingPlatform != null)
+
+
+        if(movingPlatform != null)
         {
             MoveWithPlatform();
         }
+
+
+        //if(wasOnPlatform && !isGrounded)
+        //{
+        //    transform.Translate(movingPlatformSpeedX * Time.deltaTime, 0.0f, 0.0f, Space.World);
+        //}
+        //else if(wasOnPlatform && isGrounded)
+        //{
+        //    wasOnPlatform = false;
+        //}
         Debug.DrawRay(transform.position, Vector3.down * rayLength, Color.white);
+    }
+
+    private bool CheckGrounded()
+    {
+        return Physics2D.Raycast(this.transform.position, Vector2.down, rayLength, groundLayer.value);
     }
 
     public bool IsGrounded()
     {
-        return Physics2D.Raycast(this.transform.position, Vector2.down, rayLength, groundLayer.value);
-    }
+        return isGrounded;
+    }    
 
     private void StartJump()
     {
         if (IsGrounded())
         {
-            _jumpTimer.Activate();
+            jumpTimer.Activate();
         }
     }
 
     private void EndJump()
     {
-        if (_jumpTimer.IsActive())
+        if (jumpTimer.IsActive())
         {
-            _jumpTimer.End();
+            jumpTimer.End();
         }
     }
 
@@ -120,39 +152,52 @@ public class PlayerPhysics : MonoBehaviour
 
     private void UpdateJumpTimeMult()
     {
-        jumpTimeMult = _jumpTimer.TimePastPercent();
+        jumpTimeMult = jumpTimer.TimePastPercent();
     }
 
     private void Rotate()
     {
-        _isFacingRight = !_isFacingRight;
-        _scale.x *= -1;
-        transform.localScale = _scale;
+        isFacingRight = !isFacingRight;
+        scale.x *= -1;
+        transform.localScale = scale;
     }
 
     private void OnTriggerEnter2D(Collider2D collision)
     {
         if(collision.CompareTag("Bonus"))
         {
-            ScoreController.GetController().IncreaseScore(5);
-            Debug.Log("Score + 5");
-            collision.gameObject.SetActive(false);
+            Bonus picked = collision.gameObject.GetComponent<Bonus>();
+            ScoreController.GetController().IncreaseScore(picked.GetPoints());
+            Debug.Log("Score + " + picked.GetPoints());
+            picked.StartPickupAnimation();
         }
         if(collision.CompareTag("PlatformTop"))
         {
-            _movingPlatform = collision.gameObject.transform.parent.gameObject.GetComponent<MovingPlatform>();
+            movingPlatform = collision.gameObject.transform.parent.gameObject.GetComponent<MovingPlatform>();
+        }
+        if(collision.CompareTag("LevelEnd"))
+        {
+            Debug.Log("Level is finished!");
         }
     }
     private void OnTriggerExit2D(Collider2D collision)
     {
         if (collision.CompareTag("PlatformTop"))
         {
-            _movingPlatform = null;
+            // add speed
+            movingPlatformSpeedX = movingPlatform.SpeedX();
+            wasOnPlatform = true;
+            movingPlatform = null;
         }
     }
 
     private void MoveWithPlatform()
     {
-        transform.Translate(_movingPlatform.DeltaX(), _movingPlatform.DeltaY(), 0.0f);
+        transform.Translate(movingPlatform.DeltaX(), movingPlatform.DeltaY(), 0.0f);
+    }
+
+    public bool OnPlatform()
+    {
+        return movingPlatform != null;
     }
 }

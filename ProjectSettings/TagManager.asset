@@ -6,6 +6,7 @@ TagManager:
   tags:
   - Bonus
   - PlatformTop
+  - LevelEnd
   layers:
   - Default
   - TransparentFX

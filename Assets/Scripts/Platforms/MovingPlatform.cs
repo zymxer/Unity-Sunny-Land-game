@@ -9,80 +9,80 @@ public class MovingPlatform : MonoBehaviour
 
     [Header("< 10 for Horizontal/Vertical, > 50 for Trajectory")]
     [SerializeField]
-    private float _speed = 0.0f;
+    private float speed = 0.0f;
     [Header("True for Right/Up")]
     [SerializeField]
-    private bool _startDirection = true;
+    private bool startDirection = true;
 
     [Space]
     [SerializeField]
-    private MoveMode _moveMode;
+    private MoveMode moveMode;
 
     [Header("For Horizontal mode")]
     [SerializeField]
-    private float _xAmplitude = 0.0f;
+    private float xMargin = 0.0f;
 
     [Header("For Vertical mode")]
     [SerializeField]
-    private float _yAmplitude = 0.0f;
+    private float yMargin = 0.0f;
 
     [Header("For Trajectory mode")]
     [SerializeField]
-    private bool _cycled;
+    private bool cycled;
     [SerializeField]
-    private List<Vector2> _points = new List<Vector2>();
+    private List<Vector2> points = new List<Vector2>();
     [SerializeField]
-    private Line _line;
+    private Line line;
 
-    private Vector3 _startPosition;
+    private Vector3 startPosition;
     private Transform _transform;
-    private int _direction;
-    private float _localTimeScale = 1.0f;
+    private int direction;
+    private float localTimeScale = 1.0f;
 
-    private int _pointIndex = 0;
-    private float _nextX = 0.0f;
-    private float _nextY = 0.0f;
+    private int pointIndex = 0;
+    private float nextX = 0.0f;
+    private float nextY = 0.0f;
 
-    private Vector2 _prevPosition;
-    private float _deltaX = 0.0f;
-    private float _deltaY = 0.0f;
+    private Vector2 prevPosition;
+    private float deltaX = 0.0f;
+    private float deltaY = 0.0f;
     
     // Start is called before the first frame update
     void Start()
     {
-        _startPosition = transform.position;
+        startPosition = transform.position;
         _transform = GetComponent<Transform>();
-        _direction = _startDirection ? 1 : -1;
-        if(_moveMode == MoveMode.Trajectory)
+        direction = startDirection ? 1 : -1;
+        if(moveMode == MoveMode.Trajectory)
         {
-            transform.position = new Vector3(_points[0].x, _points[0].y, 0f);
+            transform.position = new Vector3(points[0].x, points[0].y, 0f);
         }
     }
 
     // Update is called once per frame
     void Update()
     {
-        if(_line != null)
+        if(line != null)
         {
-            _points = _line.points;
+            points = line.points;
         }
-        _prevPosition.x = transform.position.x;
-        _prevPosition.y = transform.position.y;
-        switch (_moveMode)
+        prevPosition.x = transform.position.x;
+        prevPosition.y = transform.position.y;
+        switch (moveMode)
         {
             case MoveMode.Horizontal:
                 //if(_xAmplitude != 0.0f)
-                transform.Translate(_speed * Time.deltaTime * _direction * _localTimeScale, 0.0f, 0.0f, Space.World);
+                transform.Translate(speed * Time.deltaTime * direction * localTimeScale, 0.0f, 0.0f, Space.World);
                 break;
             case MoveMode.Vertical:
                 //if(_xAmplitude != 0.0f)
-                transform.Translate(0.0f, _speed * Time.deltaTime * _direction * _localTimeScale, 0.0f, Space.World);
+                transform.Translate(0.0f, speed * Time.deltaTime * direction * localTimeScale, 0.0f, Space.World);
                 break;
             case MoveMode.Trajectory:
-                _nextX = Mathf.Lerp(transform.position.x, _points[_pointIndex].x, _speed * Time.deltaTime);
-                _nextY = Mathf.Lerp(transform.position.y, _points[_pointIndex].y, _speed * Time.deltaTime);
-                transform.Translate(_nextX - transform.position.x, _nextY - transform.position.y, 0.0f, Space.World);
-                if(Mathf.Abs(transform.position.x - _points[_pointIndex].x) < 0.01f &&  Mathf.Abs(transform.position.y - _points[_pointIndex].y) < 0.01f)
+                nextX = Mathf.Lerp(transform.position.x, points[pointIndex].x, speed * Time.deltaTime);
+                nextY = Mathf.Lerp(transform.position.y, points[pointIndex].y, speed * Time.deltaTime);
+                transform.Translate(nextX - transform.position.x, nextY - transform.position.y, 0.0f, Space.World);
+                if(Mathf.Abs(transform.position.x - points[pointIndex].x) < 0.01f &&  Mathf.Abs(transform.position.y - points[pointIndex].y) < 0.01f)
                 {
                     UpdatePointIndex();
                 }
@@ -96,26 +96,40 @@ public class MovingPlatform : MonoBehaviour
 
     private void CheckDirection()
     {
-        switch (_moveMode)
+        switch (moveMode)
         {
             case MoveMode.Horizontal:
-                if(_direction == 1 && _transform.position.x >= _startPosition.x + _xAmplitude)
+                if(startDirection)
                 {
-                    _direction = -1;
+                    if (direction == 1 && transform.position.x >= startPosition.x + xMargin)
+                    {
+                        direction = -1;
+                    }
+                    else if (direction == -1 && transform.position.x <= startPosition.x)
+                    {
+                        direction = 1;
+                    }
                 }
-                else if(_direction == -1 && _transform.position.x <= _startPosition.x - _xAmplitude)
+                else
                 {
-                    _direction = 1;
+                    if (direction == 1 && transform.position.x >= startPosition.x)
+                    {
+                        direction = -1;
+                    }
+                    else if (direction == -1 && transform.position.x <= startPosition.x - xMargin)
+                    {
+                        direction = 1;
+                    }
                 }
                 break;
             case MoveMode.Vertical:
-                if (_direction == 1 && _transform.position.y >= _startPosition.y + _yAmplitude)
+                if (direction == 1 && transform.position.y >= startPosition.y + yMargin)
                 {
-                    _direction = -1;
+                    direction = -1;
                 }
-                else if (_direction == -1 && _transform.position.y <= _startPosition.y - _yAmplitude)
+                else if (direction == -1 && transform.position.y <= startPosition.y)
                 {
-                    _direction = 1;
+                    direction = 1;
                 }
                 break;
             default: break;
@@ -125,39 +139,52 @@ public class MovingPlatform : MonoBehaviour
 
     private void UpdatePointIndex()
     {
-        if(_direction == 1 && _pointIndex == _points.Count - 1)
+        if(direction == 1 && pointIndex == points.Count - 1)
         {
-            if(_cycled)
+            if(cycled)
             {
-                _pointIndex = 0;
+                pointIndex = 0;
                 return;
             }
-            _direction = -1;
+            direction = -1;
         }
-        else if (_direction == -1 && _pointIndex == 0)
+        else if (direction == -1 && pointIndex == 0)
         {
-            if (_cycled)
+            if (cycled)
             {
-                _pointIndex = _points.Count - 1;
+                pointIndex = points.Count - 1;
                 return;
             }
-            _direction = 1;
+            direction = 1;
         }
-        _pointIndex += _direction;
+        pointIndex += direction;
     }
 
     private void UpdateDeltas()
     {
-        _deltaX = transform.position.x - _prevPosition.x;
-        _deltaY = transform.position.y - _prevPosition.y;
+        deltaX = transform.position.x - prevPosition.x;
+        deltaY = transform.position.y - prevPosition.y;
+        //Debug.Log(_deltaY);
+    }
+
+    public float SpeedX()
+    {
+        //return DeltaX() / Time.deltaTime;
+        return speed * direction;
+    }
+    public float SpeedY()
+    {
+        //return _speed * _direction;
+        //Debug.Log(DeltaY() * 1000.0f + " / " + Time.deltaTime * 1000.0f);
+        return DeltaY() / Time.deltaTime;
     }
 
     public float DeltaX()
     {
-        return _deltaX;
+        return deltaX;
     }
     public float DeltaY()
     {
-        return _deltaY;
+        return deltaY;
     }
 }

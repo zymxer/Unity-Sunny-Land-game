@@ -5,8 +5,10 @@ using UnityEngine.Video;
 
 public class TimersController : MonoBehaviour
 {
-    private readonly ArrayList _timersList = new ArrayList();
+    private readonly List<Timer> timersList = new List<Timer>();
     private static TimersController instance = null;
+
+    private Timer currentTimer;
 
     private void Awake()
     {
@@ -15,19 +17,18 @@ public class TimersController : MonoBehaviour
             instance = this;
         }
     }
-    public ArrayList GetTimersList()
-    {
-        return _timersList;
-    }
 
     public void AddTimer(Timer timer)
     {
-        _timersList.Add(timer);
+        timersList.Add(timer);
     }
 
     public void RemoveTimer(Timer timer) 
     {
-        _timersList.Remove(timer);
+        timer.OnStart().RemoveAllListeners();
+        timer.OnValueChanged().RemoveAllListeners();
+        timer.OnEnd().RemoveAllListeners();
+        timersList.Remove(timer);
     }
     
     void Update()
@@ -37,15 +38,20 @@ public class TimersController : MonoBehaviour
 
     private void UpdateTimers()
     {
-        foreach (Timer timer in _timersList)
+        for (int i = timersList.Count - 1; i >= 0; i--)
         {
-            UpdateTimer(timer);
+            currentTimer = timersList[i];
+            UpdateTimer(currentTimer);
         }
     }
 
     private void UpdateTimer(Timer timer)
     {
-        if (timer.IsActive())
+        if(timer.ToDelete())
+        {
+            RemoveTimer(timer);
+        }
+        else if (timer.IsActive())
         {
             timer.SetValue(timer.GetValue() - Time.deltaTime);
             timer.UpdateDelta();
