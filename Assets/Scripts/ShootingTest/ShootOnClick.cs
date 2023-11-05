@@ -22,9 +22,9 @@ public class ShootOnClick : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        if(Input.GetMouseButtonDown(0)) 
+        clickData.UpdateClickData();
+        if (Input.GetMouseButtonDown(0)) 
         {
-            clickData.UpdateClickData();
             shotPosition = shotPoint.transform.position;// (transform.position);
             cloneProjectile = Instantiate(projectilePrefab, shotPosition, Quaternion.identity);
 

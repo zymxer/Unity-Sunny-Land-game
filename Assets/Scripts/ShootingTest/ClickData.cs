@@ -20,7 +20,7 @@ public class ClickData : MonoBehaviour
 
     private void Update()
     {
-        UpdateClickData();
+        //UpdateClickData();
         if (rotateReference)
         {
             RotateReference();

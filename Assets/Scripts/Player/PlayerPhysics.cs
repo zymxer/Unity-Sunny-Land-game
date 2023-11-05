@@ -95,7 +95,7 @@ public class PlayerPhysics : MonoBehaviour
             EndJump();
         }
 
-        if (Input.GetMouseButtonDown(0) || Input.GetKeyDown(KeyCode.Space))
+        if (Input.GetKeyDown(KeyCode.Space))
         {
             StartJump();
         }
@@ -108,11 +108,11 @@ public class PlayerPhysics : MonoBehaviour
         }
 
 
-        //if(wasOnPlatform && !isGrounded)
+        //if (wasOnPlatform && !isGrounded)
         //{
         //    transform.Translate(movingPlatformSpeedX * Time.deltaTime, 0.0f, 0.0f, Space.World);
         //}
-        //else if(wasOnPlatform && isGrounded)
+        //else if (wasOnPlatform && isGrounded)
         //{
         //    wasOnPlatform = false;
         //}
@@ -173,7 +173,12 @@ public class PlayerPhysics : MonoBehaviour
         }
         if(collision.CompareTag("PlatformTop"))
         {
+            BreakablePlatform breakablePlatform = collision.gameObject.transform.parent.gameObject.GetComponent<BreakablePlatform>();
             movingPlatform = collision.gameObject.transform.parent.gameObject.GetComponent<MovingPlatform>();
+            if(breakablePlatform != null)
+            {
+                breakablePlatform.Activate();
+            }
         }
         if(collision.CompareTag("LevelEnd"))
         {
@@ -184,10 +189,12 @@ public class PlayerPhysics : MonoBehaviour
     {
         if (collision.CompareTag("PlatformTop"))
         {
-            // add speed
-            movingPlatformSpeedX = movingPlatform.SpeedX();
-            wasOnPlatform = true;
-            movingPlatform = null;
+            if(movingPlatform != null)
+            {
+                movingPlatformSpeedX = movingPlatform.SpeedX();
+                wasOnPlatform = true;
+                movingPlatform = null;
+            }
         }
     }
 

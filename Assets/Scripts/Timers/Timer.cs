@@ -12,11 +12,11 @@ public class Timer : MonoBehaviour
     [SerializeField]
     private bool isContinuous;
     [Space]
-    [SerializeField]
+    //[SerializeField]
     private UnityEvent onStart = new UnityEvent();
-    [SerializeField]
+    //[SerializeField]
     private UnityEvent onValueChanged = new UnityEvent();
-    [SerializeField]
+    //[SerializeField]
     private UnityEvent onEnd = new UnityEvent();
 
     private float startValue;
@@ -37,12 +37,24 @@ public class Timer : MonoBehaviour
 
     public float TimePast()
     {
-        return startValue - value;
+        return Mathf.Max(startValue - value, 0.0f);
     }
 
     public float TimePastPercent()
     {
         return (startValue - value) / startValue;
+    }
+
+    public void SlowDown(float ratio)
+    {
+        startValue *= ratio;
+        value *= ratio;
+    }
+
+    public void SpeedUp(float ratio)
+    {
+        startValue /= ratio;
+        value /= ratio;
     }
 
     public float GetDelta()

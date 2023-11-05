@@ -179,6 +179,16 @@ public class MovingPlatform : MonoBehaviour
         return DeltaY() / Time.deltaTime;
     }
 
+    public void SlowDown(float ratio)
+    {
+        localTimeScale /= ratio;
+    }
+
+    public void SpeedUp(float ratio)
+    {
+        localTimeScale *= ratio;
+    }
+
     public float DeltaX()
     {
         return deltaX;

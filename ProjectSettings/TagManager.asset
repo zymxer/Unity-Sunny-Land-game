@@ -59,6 +59,12 @@ TagManager:
   - name: Player & Enemies
     uniqueID: 254410229
     locked: 0
+  - name: Equipment
+    uniqueID: 1504821711
+    locked: 0
+  - name: Projectiles
+    uniqueID: 3335631287
+    locked: 0
   - name: Foreground
     uniqueID: 836440265
     locked: 0

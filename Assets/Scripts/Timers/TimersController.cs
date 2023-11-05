@@ -5,10 +5,13 @@ using UnityEngine.Video;
 
 public class TimersController : MonoBehaviour
 {
-    private readonly List<Timer> timersList = new List<Timer>();
+    [SerializeField]
+    private int amount;
+    public readonly List<Timer> timersList = new List<Timer>();
     private static TimersController instance = null;
 
     private Timer currentTimer;
+
 
     private void Awake()
     {
@@ -33,6 +36,7 @@ public class TimersController : MonoBehaviour
     
     void Update()
     {
+        amount = timersList.Count;
         UpdateTimers();
     }
 
