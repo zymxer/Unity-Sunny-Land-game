@@ -2,18 +2,13 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-[RequireComponent(typeof(Timer))]
 public class Projectile : MonoBehaviour
 {
     [SerializeField]
     private float speed = 0.0f;
-    [SerializeField]
-    private Timer timer;
 
-    [SerializeField]
     private float targetAngle = 0.0f;
-
-    private float radians;
+    private float radians = 0.0f;
     private float speedX = 0.0f;
     private float speedY = 0.0f;
 
@@ -21,9 +16,7 @@ public class Projectile : MonoBehaviour
 
     private void Start()
     {
-        timer.OnEnd().AddListener(OnTimerEnd);
         _rigidbody = GetComponent<Rigidbody2D>();
-        //_rigidbody.AddForce(transform.rotation.eulerAngles);
     }
 
     private void Update()
@@ -39,19 +32,11 @@ public class Projectile : MonoBehaviour
         speedY = speed * Mathf.Sin(radians);
     }
 
-
-    private void OnTimerEnd()
-    {
-        Destroy(gameObject);
-        timer.Remove();
-    }
-
     private void OnTriggerEnter2D(Collider2D collision)
     {
-        if (!collision.gameObject.CompareTag("Player") && !collision.gameObject.CompareTag("PlatformTop"))
+        if (collision.gameObject.CompareTag("DestroyTrigger") || collision.gameObject.CompareTag("World"))
         {
-            gameObject.SetActive(false);
-            //Destroy(gameObject);
+            Destroy(gameObject);
         }
     }
 }

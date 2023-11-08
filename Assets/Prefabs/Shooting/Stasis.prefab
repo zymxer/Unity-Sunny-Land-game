@@ -13,7 +13,6 @@ GameObject:
   - component: {fileID: 379738155325860919}
   - component: {fileID: 8319726381025893388}
   - component: {fileID: 4781813743775437706}
-  - component: {fileID: 1486888247443922079}
   - component: {fileID: 6518205556286669662}
   - component: {fileID: 3437618623014832570}
   m_Layer: 0
@@ -175,23 +174,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   speed: 9
-  timer: {fileID: 1486888247443922079}
-  targetAngle: 0
---- !u!114 &1486888247443922079
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 8331470393305192576}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 019de608f2423ee4694883e863dd1036, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  value: 5
-  isActive: 1
-  isContinuous: 0
 --- !u!114 &6518205556286669662
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -204,7 +186,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1f564f33bc810de499fa63fbce30887a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  slowRatio: 5
+  slowRatio: 10
   color: {r: 0, g: 0.5900979, b: 1, a: 1}
   duration: 5
   timer: {fileID: 3437618623014832570}

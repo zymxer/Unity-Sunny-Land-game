@@ -12,7 +12,6 @@ GameObject:
   - component: {fileID: 4289812680805754284}
   - component: {fileID: 4223775141290251893}
   - component: {fileID: 4940394269360196614}
-  - component: {fileID: 7988989586226156321}
   m_Layer: 0
   m_Name: testProjectile
   m_TagString: Untagged
@@ -127,20 +126,4 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   speed: 9
-  timer: {fileID: 7988989586226156321}
   targetAngle: 0
---- !u!114 &7988989586226156321
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 7616248456798105035}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 019de608f2423ee4694883e863dd1036, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  value: 5
-  isActive: 1
-  isContinuous: 0

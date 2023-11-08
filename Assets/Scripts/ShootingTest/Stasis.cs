@@ -8,7 +8,7 @@ public class Stasis : MonoBehaviour
     [SerializeField]
     private float slowRatio = 2.0f;
     [SerializeField]
-    private Color color;
+    private Color color; //for test
 
     [SerializeField]
     private float duration = 1.0f;
@@ -16,6 +16,8 @@ public class Stasis : MonoBehaviour
     private GameObject target;
     [SerializeField]
     private Timer timer;
+
+    private static ArrayList affectedObjects = new ArrayList();
     // Start is called before the first frame update
     void Start()
     {
@@ -28,9 +30,16 @@ public class Stasis : MonoBehaviour
         if (!collision.gameObject.CompareTag("Player") && !collision.gameObject.CompareTag("PlatformTop"))
         {
             target = collision.gameObject;
-            //timer = collision.gameObject.AddComponent<Timer>();
-            //timer.ResetValue(duration);
-            timer.Activate();
+            if(!affectedObjects.Contains(target))
+            {
+                gameObject.SetActive(false);
+                affectedObjects.Add(target);
+                timer.Activate();
+            }
+            else
+            {
+                Destroy(gameObject);
+            }
         }
     }
 
@@ -42,9 +51,11 @@ public class Stasis : MonoBehaviour
 
     private void OnTimerEnd()
     {
+        affectedObjects.Remove(target);
         SpeedUpTimers();
         SpeedUpObject();
         timer.Remove();
+        Destroy(gameObject);
     }
 
     private void SlowDownTimers()
@@ -75,6 +86,7 @@ public class Stasis : MonoBehaviour
     {
         if(target != null)
         {
+            if(target.GetComponent<SpriteRenderer>() != null) //for test
             target.GetComponent<SpriteRenderer>().color = color;
             MovingPlatform movingPlatform = target.GetComponent<MovingPlatform>();
             if (movingPlatform != null)

@@ -7,6 +7,8 @@ TagManager:
   - Bonus
   - PlatformTop
   - LevelEnd
+  - World
+  - DestroyTrigger
   layers:
   - Default
   - TransparentFX
