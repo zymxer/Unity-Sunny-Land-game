@@ -7,8 +7,10 @@ TagManager:
   - Bonus
   - PlatformTop
   - LevelEnd
-  - World
-  - DestroyTrigger
+  - Enemy
+  - Key
+  - Heart
+  - FallCollider
   layers:
   - Default
   - TransparentFX

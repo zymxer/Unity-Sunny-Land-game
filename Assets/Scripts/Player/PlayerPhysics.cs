@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEditor.SceneManagement;
+using UnityEditor.Sprites;
 using UnityEngine;
 
 public class PlayerPhysics : MonoBehaviour
@@ -20,6 +21,11 @@ public class PlayerPhysics : MonoBehaviour
     [SerializeField]
     private Timer jumpTimer;
 
+    private int keysFound = 0;
+    private int keysAmount = 3;
+    private int lives = 3;
+    private Vector3 startPosition;
+
     private Rigidbody2D _rigidbody;
     private bool isWalking = false;
     private bool isFacingRight = true;
@@ -33,6 +39,11 @@ public class PlayerPhysics : MonoBehaviour
     private bool wasOnPlatform = false;
 
     private bool isGrounded = false;
+
+    private void Awake()
+    {
+        startPosition = transform.position;
+    }
 
     void Start()
     {
@@ -182,7 +193,55 @@ public class PlayerPhysics : MonoBehaviour
         }
         if(collision.CompareTag("LevelEnd"))
         {
-            Debug.Log("Level is finished!");
+            if(keysFound == keysAmount)
+            {
+                Debug.Log("Level is finished!");
+            }
+            else
+            {
+                Debug.Log("Not all keys are found!");
+            }
+        }
+
+        if (collision.CompareTag("Enemy"))
+        {
+            GameObject enemy = collision.gameObject;
+            if(transform.position.y > enemy.transform.position.y)
+            {
+                ScoreController.GetController().IncreaseScore(enemy.GetComponent<EnemyController>().Points());
+                Debug.Log("Enemy died!");
+            }
+            else
+            {
+                lives--;
+                transform.position = startPosition;
+                _rigidbody.velocity = Vector3.zero;
+                if (lives == 0)
+                {
+                    Debug.Log("Game over!");
+                }
+                else
+                {
+                    Debug.Log(lives + " lives remaind!");
+                }
+
+            }
+        }
+        if (collision.CompareTag("Key"))
+        {
+            keysFound++;
+            Debug.Log(keysFound + "/" + keysAmount + " found!");
+            collision.gameObject.SetActive(false);
+        }
+        if (collision.CompareTag("Heart"))
+        {
+            lives++;
+            Debug.Log(lives-1 + " + 1, now " + lives);
+            collision.gameObject.SetActive(false);
+        }
+        if (collision.CompareTag("FallCollider"))
+        {
+            Death();
         }
     }
     private void OnTriggerExit2D(Collider2D collision)
@@ -206,5 +265,20 @@ public class PlayerPhysics : MonoBehaviour
     public bool OnPlatform()
     {
         return movingPlatform != null;
+    }
+
+    private void Death()
+    {
+        lives--;
+        transform.position = startPosition;
+        _rigidbody.velocity = Vector3.zero;
+        if (lives == 0)
+        {
+            Debug.Log("Game over!");
+        }
+        else
+        {
+            Debug.Log(lives + " lives remaind!");
+        }
     }
 }
