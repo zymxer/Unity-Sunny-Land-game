@@ -7,6 +7,10 @@ TagManager:
   - Bonus
   - PlatformTop
   - LevelEnd
+  - Enemy
+  - Key
+  - Heart
+  - FallCollider
   layers:
   - Default
   - TransparentFX
