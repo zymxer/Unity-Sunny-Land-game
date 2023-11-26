@@ -21,6 +21,15 @@ public class PlayerPhysics : MonoBehaviour
     [SerializeField]
     private Timer jumpTimer;
 
+    [SerializeField]
+    private AudioClip bSound;
+    [SerializeField]
+    private AudioClip keySound;
+    [SerializeField]
+    private AudioClip eagleSound;
+
+    private AudioSource audioSource;
+
     private int keysFound = 0;
     private int keysAmount = 3;
     private int lives = 3;
@@ -53,6 +62,7 @@ public class PlayerPhysics : MonoBehaviour
         jumpTimer.OnEnd().AddListener(AddJumpForce);
         jumpTimer.OnValueChanged().AddListener(UpdateJumpTimeMult);
         playerGraphics = GetComponent<PlayerGraphics>();
+        audioSource = GetComponent<AudioSource>();
         GameManager.instance.EnableLives(lives);
     }
 
@@ -165,6 +175,7 @@ public class PlayerPhysics : MonoBehaviour
     {
         if(collision.CompareTag("Bonus"))
         {
+            audioSource.PlayOneShot(bSound, AudioListener.volume);
             Bonus picked = collision.gameObject.GetComponent<Bonus>();
             ScoreController.GetController().IncreaseScore(picked.GetPoints());
             picked.StartPickupAnimation();
@@ -185,13 +196,10 @@ public class PlayerPhysics : MonoBehaviour
         }
         if(collision.CompareTag("LevelEnd"))
         {
-            if(keysFound == keysAmount)
+            if (keysFound == keysAmount)
             {
-                Debug.Log("Level is finished!");
-            }
-            else
-            {
-                Debug.Log("Not all keys are found!");
+                ScoreController.GetController().IncreaseScore(100 * lives);
+                GameManager.instance.LevelCompleted();
             }
         }
 
@@ -200,6 +208,7 @@ public class PlayerPhysics : MonoBehaviour
             GameObject enemy = collision.gameObject;
             if(transform.position.y > enemy.transform.position.y)
             {
+                audioSource.PlayOneShot(eagleSound, AudioListener.volume);
                 ScoreController.GetController().IncreaseScore(enemy.GetComponent<EnemyController>().Points());
                 GameManager.instance.UpdateEnemies();
                 collision.enabled = false;
@@ -223,6 +232,7 @@ public class PlayerPhysics : MonoBehaviour
         }
         if (collision.CompareTag("Key"))
         {
+            audioSource.PlayOneShot(keySound, AudioListener.volume);
             keysFound++;
             collision.gameObject.SetActive(false);
             GameManager.instance.AddKeys();
