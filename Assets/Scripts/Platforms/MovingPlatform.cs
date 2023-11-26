@@ -29,10 +29,11 @@ public class MovingPlatform : MonoBehaviour
     [Header("For Trajectory mode")]
     [SerializeField]
     private bool cycled;
+
     [SerializeField]
-    private List<Vector2> points = new List<Vector2>();
-    [SerializeField]
-    private Line line;
+    private Transform[] waypoints = new Transform[0];
+
+    private Vector2[] points;
 
     private Vector3 startPosition;
     private Transform _transform;
@@ -50,6 +51,11 @@ public class MovingPlatform : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
+        points = new Vector2[waypoints.Length]; 
+        for(int i = 0; i < waypoints.Length; i++)
+        {
+            points[i] = waypoints[i].position;
+        }
         startPosition = transform.position;
         _transform = GetComponent<Transform>();
         direction = startDirection ? 1 : -1;
@@ -62,27 +68,19 @@ public class MovingPlatform : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        if(line != null)
-        {
-            points = line.points;
-        }
         prevPosition.x = transform.position.x;
         prevPosition.y = transform.position.y;
         switch (moveMode)
         {
             case MoveMode.Horizontal:
-                //if(_xAmplitude != 0.0f)
                 transform.Translate(speed * Time.deltaTime * direction * localTimeScale, 0.0f, 0.0f, Space.World);
                 break;
             case MoveMode.Vertical:
-                //if(_xAmplitude != 0.0f)
                 transform.Translate(0.0f, speed * Time.deltaTime * direction * localTimeScale, 0.0f, Space.World);
                 break;
             case MoveMode.Trajectory:
-                nextX = Mathf.Lerp(transform.position.x, points[pointIndex].x, speed * Time.deltaTime);
-                nextY = Mathf.Lerp(transform.position.y, points[pointIndex].y, speed * Time.deltaTime);
-                transform.Translate(nextX - transform.position.x, nextY - transform.position.y, 0.0f, Space.World);
-                if(Mathf.Abs(transform.position.x - points[pointIndex].x) < 0.01f &&  Mathf.Abs(transform.position.y - points[pointIndex].y) < 0.01f)
+                transform.position = Vector2.MoveTowards(transform.position, points[pointIndex], speed * Time.deltaTime * localTimeScale);
+                if(CheckPointIndex())
                 {
                     UpdatePointIndex();
                 }
@@ -92,6 +90,11 @@ public class MovingPlatform : MonoBehaviour
         }
         UpdateDeltas();
         CheckDirection();
+    }
+
+    private bool CheckPointIndex()
+    {
+        return Mathf.Abs(transform.position.x - points[pointIndex].x) < 0.01f && Mathf.Abs(transform.position.y - points[pointIndex].y) < 0.01f;
     }
 
     private void CheckDirection()
@@ -139,7 +142,7 @@ public class MovingPlatform : MonoBehaviour
 
     private void UpdatePointIndex()
     {
-        if(direction == 1 && pointIndex == points.Count - 1)
+        if(direction == 1 && pointIndex == points.Length - 1)
         {
             if(cycled)
             {
@@ -152,7 +155,7 @@ public class MovingPlatform : MonoBehaviour
         {
             if (cycled)
             {
-                pointIndex = points.Count - 1;
+                pointIndex = points.Length - 1;
                 return;
             }
             direction = 1;
@@ -164,18 +167,15 @@ public class MovingPlatform : MonoBehaviour
     {
         deltaX = transform.position.x - prevPosition.x;
         deltaY = transform.position.y - prevPosition.y;
-        //Debug.Log(_deltaY);
     }
 
     public float SpeedX()
     {
-        //return DeltaX() / Time.deltaTime;
         return speed * direction;
     }
     public float SpeedY()
     {
         //return _speed * _direction;
-        //Debug.Log(DeltaY() * 1000.0f + " / " + Time.deltaTime * 1000.0f);
         return DeltaY() / Time.deltaTime;
     }
 

@@ -11,6 +11,9 @@ TagManager:
   - Key
   - Heart
   - FallCollider
+  - DestroyTrigger
+  - World
+  - Platform
   layers:
   - Default
   - TransparentFX

@@ -1,11 +1,15 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
+using TMPro;
 
 public class ScoreController : MonoBehaviour
 {
     [SerializeField]
-    private int _score = 0;
+    private int score = 0;
+    [SerializeField]
+    private TMP_Text scoreText;
     private static ScoreController instance = null;
 
     private void Awake()
@@ -15,23 +19,26 @@ public class ScoreController : MonoBehaviour
             instance = this;
         }
     }
-    public void SetScore(int score)
+    public void SetScore(int value)
     {
-        _score = score;
+        score = value;
+        scoreText.text = score.ToString();
     }
     public int GetScore()
     {
-        return _score;
+        return score;
     }
 
     public void IncreaseScore(int value)
     {
-        _score += value;
+        score += value;
+        scoreText.text = score.ToString();
     }
 
     public void DecreaseScore(int value)
     {
-        _score -= value;
+        score -= value;
+        scoreText.text = score.ToString();
     }
 
     public static ScoreController GetController()

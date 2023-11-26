@@ -33,10 +33,10 @@ public class PlayerPhysics : MonoBehaviour
     public LayerMask groundLayer;
     private PlayerGraphics playerGraphics;
     private float jumpTimeMult;
-    private MovingPlatform movingPlatform;
+
+    GameObject platform = null;
 
     private float movingPlatformSpeedX;
-    private bool wasOnPlatform = false;
 
     private bool isGrounded = false;
 
@@ -53,81 +53,69 @@ public class PlayerPhysics : MonoBehaviour
         jumpTimer.OnEnd().AddListener(AddJumpForce);
         jumpTimer.OnValueChanged().AddListener(UpdateJumpTimeMult);
         playerGraphics = GetComponent<PlayerGraphics>();
+        GameManager.instance.EnableLives(lives);
     }
 
 
     void Update()
     {
-        if(CheckGrounded())
+        if (GameManager.instance.currentGameState == GameState.GS_GAME)
         {
-            isGrounded = true;
-        }
-        else
-        {
-            isGrounded = false;
-        }
-
-
-        if (Input.GetKeyDown(KeyCode.RightArrow) || Input.GetKeyDown(KeyCode.D))
-        {
-            if (!isFacingRight)
+            if (CheckGrounded())
             {
-                Rotate();
+                isGrounded = true;
             }
-        }
-        if (Input.GetKeyDown(KeyCode.LeftArrow) || Input.GetKeyDown(KeyCode.A))
-        {
-            if (isFacingRight)
+            else
             {
-                Rotate();
+                isGrounded = false;
             }
+
+
+            if (Input.GetKeyDown(KeyCode.RightArrow) || Input.GetKeyDown(KeyCode.D))
+            {
+                if (!isFacingRight)
+                {
+                    Rotate();
+                }
+            }
+            if (Input.GetKeyDown(KeyCode.LeftArrow) || Input.GetKeyDown(KeyCode.A))
+            {
+                if (isFacingRight)
+                {
+                    Rotate();
+                }
+            }
+
+            if (Input.GetKey(KeyCode.RightArrow) || Input.GetKey(KeyCode.D))
+            {
+                isWalking = true;
+                playerGraphics.SetWalking(true);
+                transform.Translate(moveSpeed * Time.deltaTime, 0.0f, 0.0f, Space.World);
+            }
+            if (Input.GetKey(KeyCode.LeftArrow) || Input.GetKey(KeyCode.A))
+            {
+                isWalking = true;
+                playerGraphics.SetWalking(true);
+                transform.Translate(-moveSpeed * Time.deltaTime, 0.0f, 0.0f, Space.World);
+            }
+
+            if (Input.GetKeyUp(KeyCode.RightArrow) || Input.GetKeyUp(KeyCode.D) || Input.GetKeyUp(KeyCode.LeftArrow) || Input.GetKeyUp(KeyCode.A))
+            {
+                isWalking = false;
+                playerGraphics.SetWalking(false);
+            }
+            if (Input.GetKeyUp(KeyCode.Space))
+            {
+                EndJump();
+            }
+
+            if (Input.GetKeyDown(KeyCode.Space))
+            {
+                StartJump();
+            }
+
+            Debug.DrawRay(transform.position, Vector3.down * rayLength, Color.white);
         }
-
-        if (Input.GetKey(KeyCode.RightArrow) || Input.GetKey(KeyCode.D))
-        {
-            isWalking = true;
-            playerGraphics.SetWalking(true);
-            transform.Translate(moveSpeed * Time.deltaTime, 0.0f, 0.0f, Space.World);
-        }
-        if (Input.GetKey(KeyCode.LeftArrow) || Input.GetKey(KeyCode.A))
-        {
-            isWalking = true;
-            playerGraphics.SetWalking(true);
-            transform.Translate(-moveSpeed * Time.deltaTime, 0.0f, 0.0f, Space.World);
-        }
-
-        if (Input.GetKeyUp(KeyCode.RightArrow) || Input.GetKeyUp(KeyCode.D) || Input.GetKeyUp(KeyCode.LeftArrow) || Input.GetKeyUp(KeyCode.A))
-        {
-            isWalking = false;
-            playerGraphics.SetWalking(false);
-        }
-        if (Input.GetKeyUp(KeyCode.Space))
-        {
-            EndJump();
-        }
-
-        if (Input.GetKeyDown(KeyCode.Space))
-        {
-            StartJump();
-        }
-
-
-
-        if(movingPlatform != null)
-        {
-            MoveWithPlatform();
-        }
-
-
-        //if (wasOnPlatform && !isGrounded)
-        //{
-        //    transform.Translate(movingPlatformSpeedX * Time.deltaTime, 0.0f, 0.0f, Space.World);
-        //}
-        //else if (wasOnPlatform && isGrounded)
-        //{
-        //    wasOnPlatform = false;
-        //}
-        Debug.DrawRay(transform.position, Vector3.down * rayLength, Color.white);
     }
 
     private bool CheckGrounded()
@@ -179,16 +167,20 @@ public class PlayerPhysics : MonoBehaviour
         {
             Bonus picked = collision.gameObject.GetComponent<Bonus>();
             ScoreController.GetController().IncreaseScore(picked.GetPoints());
-            Debug.Log("Score + " + picked.GetPoints());
             picked.StartPickupAnimation();
         }
-        if(collision.CompareTag("PlatformTop"))
+        if(collision.CompareTag("Platform"))
         {
-            BreakablePlatform breakablePlatform = collision.gameObject.transform.parent.gameObject.GetComponent<BreakablePlatform>();
-            movingPlatform = collision.gameObject.transform.parent.gameObject.GetComponent<MovingPlatform>();
+            GameObject platform = collision.gameObject;
+            BreakablePlatform breakablePlatform = platform.GetComponent<BreakablePlatform>();
+            MovingPlatform movingPlatform = platform.GetComponent<MovingPlatform>();
             if(breakablePlatform != null)
             {
                 breakablePlatform.Activate();
+            }
+            if(movingPlatform != null)
+            {
+                transform.SetParent(platform.transform);
             }
         }
         if(collision.CompareTag("LevelEnd"))
@@ -209,11 +201,13 @@ public class PlayerPhysics : MonoBehaviour
             if(transform.position.y > enemy.transform.position.y)
             {
                 ScoreController.GetController().IncreaseScore(enemy.GetComponent<EnemyController>().Points());
-                Debug.Log("Enemy died!");
+                GameManager.instance.UpdateEnemies();
+                collision.enabled = false;
             }
             else
             {
                 lives--;
+                GameManager.instance.EnableLives(lives);
                 transform.position = startPosition;
                 _rigidbody.velocity = Vector3.zero;
                 if (lives == 0)
@@ -222,7 +216,7 @@ public class PlayerPhysics : MonoBehaviour
                 }
                 else
                 {
-                    Debug.Log(lives + " lives remaind!");
+                   
                 }
 
             }
@@ -230,13 +224,13 @@ public class PlayerPhysics : MonoBehaviour
         if (collision.CompareTag("Key"))
         {
             keysFound++;
-            Debug.Log(keysFound + "/" + keysAmount + " found!");
             collision.gameObject.SetActive(false);
+            GameManager.instance.AddKeys();
         }
         if (collision.CompareTag("Heart"))
         {
             lives++;
-            Debug.Log(lives-1 + " + 1, now " + lives);
+            GameManager.instance.EnableLives(lives);
             collision.gameObject.SetActive(false);
         }
         if (collision.CompareTag("FallCollider"))
@@ -246,31 +240,17 @@ public class PlayerPhysics : MonoBehaviour
     }
     private void OnTriggerExit2D(Collider2D collision)
     {
-        if (collision.CompareTag("PlatformTop"))
+        if (collision.CompareTag("Platform") && collision.gameObject.activeInHierarchy)
         {
-            if(movingPlatform != null)
-            {
-                movingPlatformSpeedX = movingPlatform.SpeedX();
-                wasOnPlatform = true;
-                movingPlatform = null;
-            }
+            transform.SetParent(null);
         }
-    }
-
-    private void MoveWithPlatform()
-    {
-        transform.Translate(movingPlatform.DeltaX(), movingPlatform.DeltaY(), 0.0f);
-    }
-
-    public bool OnPlatform()
-    {
-        return movingPlatform != null;
     }
 
     private void Death()
     {
         lives--;
         transform.position = startPosition;
+        GameManager.instance.EnableLives(lives);
         _rigidbody.velocity = Vector3.zero;
         if (lives == 0)
         {
@@ -278,7 +258,7 @@ public class PlayerPhysics : MonoBehaviour
         }
         else
         {
-            Debug.Log(lives + " lives remaind!");
+            
         }
     }
 }

@@ -11,6 +11,7 @@ GameObject:
   - component: {fileID: 1120468406910380513}
   - component: {fileID: 6541167940025006922}
   - component: {fileID: 5988402536556285954}
+  - component: {fileID: 4519251990866898349}
   m_Layer: 0
   m_Name: Controllers
   m_TagString: Untagged
@@ -45,7 +46,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b0955b12c426ace4e9a8970711fa48e1, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _score: 0
+  score: 0
+  scoreText: {fileID: 0}
 --- !u!114 &5988402536556285954
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -58,3 +60,22 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 5d7e5c4bd0d06724b9a611776ac5245e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  amount: 0
+--- !u!114 &4519251990866898349
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1698495045983137210}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 46af471bad6d9c44ab1653354f274c95, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  currentGameState: 0
+  keysTab:
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  inGameCanvas: {fileID: 0}
