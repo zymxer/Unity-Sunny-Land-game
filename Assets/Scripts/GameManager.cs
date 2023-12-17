@@ -48,6 +48,7 @@ public class GameManager : MonoBehaviour
             keysTab[i].color = Color.grey;
         }
         timer.OnValueChanged().AddListener(OnTimerChange);
+        timer.Continue();
         if(!PlayerPrefs.HasKey(keyHighScore))
         {
             PlayerPrefs.SetInt(keyHighScore, 0);
@@ -140,11 +141,11 @@ public class GameManager : MonoBehaviour
         }
         if(currentGameState == GameState.GS_GAME)
         {
-            timer.Continue();
+            Time.timeScale = 1.0f;
         }
         else
         {
-            timer.Stop();
+            Time.timeScale = 0.0f;
         }
     }
 
@@ -190,13 +191,13 @@ public class GameManager : MonoBehaviour
 
     public void OnRestartButton()
     {
-        Debug.Log("I am");
-        //SceneManager.LoadSceneAsync(SceneManager.GetActiveScene().name);
+        Time.timeScale = 1.0f;
+        SceneManager.LoadSceneAsync(SceneManager.GetActiveScene().name);
     }
 
     public void OnExitButton()
     {
-        Debug.Log("Stupid");
-        //SceneManager.LoadSceneAsync("MainMenu");
+        Time.timeScale = 1.0f;
+        SceneManager.LoadSceneAsync("MainMenu");
     }
 }

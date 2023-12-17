@@ -217,12 +217,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e4791b526c8e2684584f44e9fe80f2ee, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  speed: 5
+  speed: 0
   startDirection: 1
-  moveMode: 2
+  moveMode: 0
   xMargin: 0
   yMargin: 0
   cycled: 0
-  waypoints:
-  - {fileID: 0}
-  - {fileID: 0}
+  waypoints: []

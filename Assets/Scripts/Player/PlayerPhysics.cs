@@ -4,35 +4,28 @@ using UnityEditor.SceneManagement;
 using UnityEditor.Sprites;
 using UnityEngine;
 
+[RequireComponent(typeof(Moving))]
+
 public class PlayerPhysics : MonoBehaviour
 {
     [Header("Movement parameters")]
-    [Range(0.01f, 20.0f)]
-    [SerializeField]
-    private float moveSpeed = 0.1f; // moving speed of the player
+
+    private float moveSpeed;
+
     [Space(10)]
     [Range(0.01f, 100.0f)]
     [SerializeField]
     private float jumpForce = 0.1f;
 
     [SerializeField]
+    private float jumpTimerDuration = 0.0f;
+
+    [Space]
+    [SerializeField]
     private float rayLength = 2.0f;
 
-    [SerializeField]
     private Timer jumpTimer;
 
-    [SerializeField]
-    private AudioClip bSound;
-    [SerializeField]
-    private AudioClip keySound;
-    [SerializeField]
-    private AudioClip eagleSound;
-
-    private AudioSource audioSource;
-
-    private int keysFound = 0;
-    private int keysAmount = 3;
-    private int lives = 3;
     private Vector3 startPosition;
 
     private Rigidbody2D _rigidbody;
@@ -49,27 +42,28 @@ public class PlayerPhysics : MonoBehaviour
 
     private bool isGrounded = false;
 
-    private void Awake()
-    {
-        startPosition = transform.position;
-    }
-
     void Start()
     {
+        moveSpeed = GetComponent<Moving>().Speed;
+
+        startPosition = transform.position;
         scale = transform.localScale;
         _rigidbody = GetComponent<Rigidbody2D>();
-        jumpTimer = GetComponent<Timer>();
+
+        jumpTimer = gameObject.AddComponent<Timer>();
+        jumpTimer.SetTimer(jumpTimerDuration);
         jumpTimer.OnEnd().AddListener(AddJumpForce);
         jumpTimer.OnValueChanged().AddListener(UpdateJumpTimeMult);
+
         playerGraphics = GetComponent<PlayerGraphics>();
-        audioSource = GetComponent<AudioSource>();
-        GameManager.instance.EnableLives(lives);
+
     }
 
 
     void Update()
     {
-        if (GameManager.instance.currentGameState == GameState.GS_GAME)
+        //if (GameManager.instance.currentGameState == GameState.GS_GAME)
+        if(true)
         {
             if (CheckGrounded())
             {
@@ -175,7 +169,6 @@ public class PlayerPhysics : MonoBehaviour
     {
         if(collision.CompareTag("Bonus"))
         {
-            audioSource.PlayOneShot(bSound, AudioListener.volume);
             Bonus picked = collision.gameObject.GetComponent<Bonus>();
             ScoreController.GetController().IncreaseScore(picked.GetPoints());
             picked.StartPickupAnimation();
@@ -194,53 +187,42 @@ public class PlayerPhysics : MonoBehaviour
                 transform.SetParent(platform.transform);
             }
         }
-        if(collision.CompareTag("LevelEnd"))
-        {
-            if (keysFound == keysAmount)
-            {
-                ScoreController.GetController().IncreaseScore(100 * lives);
-                GameManager.instance.LevelCompleted();
-            }
-        }
+        //if(collision.CompareTag("LevelEnd"))
+        //{
+        //    if (keysFound == keysAmount)
+        //    {
+        //        ScoreController.GetController().IncreaseScore(100 * lives);
+        //        GameManager.instance.LevelCompleted();
+        //    }
+        //}
 
         if (collision.CompareTag("Enemy"))
         {
             GameObject enemy = collision.gameObject;
             if(transform.position.y > enemy.transform.position.y)
             {
-                audioSource.PlayOneShot(eagleSound, AudioListener.volume);
                 ScoreController.GetController().IncreaseScore(enemy.GetComponent<EnemyController>().Points());
                 GameManager.instance.UpdateEnemies();
                 collision.enabled = false;
             }
             else
             {
-                lives--;
-                GameManager.instance.EnableLives(lives);
                 transform.position = startPosition;
                 _rigidbody.velocity = Vector3.zero;
-                if (lives == 0)
-                {
-                    Debug.Log("Game over!");
-                }
-                else
-                {
-                   
-                }
 
             }
         }
         if (collision.CompareTag("Key"))
         {
-            audioSource.PlayOneShot(keySound, AudioListener.volume);
-            keysFound++;
+            //audioSource.PlayOneShot(keySound, AudioListener.volume);
+            //keysFound++;
             collision.gameObject.SetActive(false);
             GameManager.instance.AddKeys();
         }
         if (collision.CompareTag("Heart"))
         {
-            lives++;
-            GameManager.instance.EnableLives(lives);
+            //lives++;
+            //GameManager.instance.EnableLives(lives);
             collision.gameObject.SetActive(false);
         }
         if (collision.CompareTag("FallCollider"))
@@ -258,17 +240,17 @@ public class PlayerPhysics : MonoBehaviour
 
     private void Death()
     {
-        lives--;
+        //lives--;
         transform.position = startPosition;
-        GameManager.instance.EnableLives(lives);
+        //GameManager.instance.EnableLives(lives);
         _rigidbody.velocity = Vector3.zero;
-        if (lives == 0)
-        {
-            Debug.Log("Game over!");
-        }
-        else
-        {
+        //if (lives == 0)
+        //{
+        //    Debug.Log("Game over!");
+        //}
+        //else
+        //{
             
-        }
+        //}
     }
 }

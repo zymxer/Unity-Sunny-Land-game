@@ -5,18 +5,11 @@ using UnityEngine.Events;
 
 public class Timer : MonoBehaviour
 {
-    [SerializeField]
     private float value;
-    [SerializeField]
     private bool isActive;
-    [SerializeField]
     private bool isContinuous;
-    [Space]
-    //[SerializeField]
     private UnityEvent onStart = new UnityEvent();
-    //[SerializeField]
     private UnityEvent onValueChanged = new UnityEvent();
-    //[SerializeField]
     private UnityEvent onEnd = new UnityEvent();
 
     private float startValue;
@@ -27,7 +20,22 @@ public class Timer : MonoBehaviour
     private void Start()
     {
         startValue = value;
+        prevoiosValue = value;
         TimersController.GetController().AddTimer(this);
+    }
+
+    //active = false, continuous = false
+    public void SetTimer(float timerValue)
+    {
+        value = timerValue;
+        isActive = false;
+        isContinuous = false;
+    }
+    public void SetTimer(float timerValue, bool timerActive, bool timerContinuous)
+    {
+        value = timerValue;
+        isActive = timerActive;
+        isContinuous = timerContinuous;
     }
 
     public float GetValue()
@@ -65,6 +73,7 @@ public class Timer : MonoBehaviour
     public void UpdateDelta()
     {
         delta = prevoiosValue - value;
+        delta = Mathf.Max(delta, 0.0f);
         prevoiosValue = value;
     }
 
@@ -110,17 +119,20 @@ public class Timer : MonoBehaviour
     {
         startValue = newValue;
         value = newValue;
+        prevoiosValue = newValue;
     }
     
     public void ResetTimer()
     {
         value = startValue;
+        prevoiosValue = startValue;
         isActive = false;
     }
 
     public void Restart()
     {
         value = startValue;
+        prevoiosValue = startValue;
         isActive = true;
     }
 
