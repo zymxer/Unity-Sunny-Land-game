@@ -136,6 +136,14 @@ public class Timer : MonoBehaviour
         isActive = true;
     }
 
+    public void RestartWithOnStart()
+    {
+        value = startValue;
+        prevoiosValue = startValue;
+        isActive = true;
+        onStart.Invoke();
+    }
+
     public void Stop()
     {
         isActive = false;

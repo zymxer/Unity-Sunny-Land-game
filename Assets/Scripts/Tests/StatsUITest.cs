@@ -6,7 +6,8 @@ using UnityEngine.UI;
 
 public class StatsUITest : MonoBehaviour
 {
-    public StatsContainer statsContainer;
+    public GameObject target;
+    private StatsContainer statsContainer;
 
     public Slider manaSlider;
     public Slider healthSlider;
@@ -22,6 +23,11 @@ public class StatsUITest : MonoBehaviour
         statsContainer.DecreaseHP(20);
     }
 
+    public void DHealthEffect()
+    {
+        StatsEffect.AddEffect(target, StatType.HEALTH, -5, 3);
+    }
+
     private void Update()
     {
         manaSlider.value = statsContainer.Mana;
@@ -30,6 +36,7 @@ public class StatsUITest : MonoBehaviour
 
     private void Start()
     {
+        statsContainer = target.GetComponent<StatsContainer>();
         manaSlider.maxValue = statsContainer.GetMaxMana();
         healthSlider.maxValue = statsContainer.GetMaxHealth();
         manaSlider.value = statsContainer.Mana;

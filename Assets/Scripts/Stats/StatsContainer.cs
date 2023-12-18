@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
+public enum StatType { MANA, HEALTH};
 public class StatsContainer : MonoBehaviour
 {
     [SerializeField]
@@ -31,12 +32,14 @@ public class StatsContainer : MonoBehaviour
     private Timer manaRestoreTimer;
 
 
-
-
-    private void Start()
+    private void Awake()
     {
         maxHealth = health;
         maxMana = mana;
+    }
+
+    private void Start()
+    {
 
         healthRestoreTimer = gameObject.AddComponent<Timer>();
         healthRestoreTimer.SetTimer(3.0f, true, true);
@@ -122,7 +125,7 @@ public class StatsContainer : MonoBehaviour
     {
         health -= value;
         health = Mathf.Max(health, 0);
-        healthRestoreCDTimer.Activate();
+        healthRestoreCDTimer.RestartWithOnStart();
     }
 
     public void IncreaseMana(float value)
@@ -135,7 +138,7 @@ public class StatsContainer : MonoBehaviour
     {
         mana -= value;
         mana = Mathf.Max(mana, 0);
-        manaRestoreCDTimer.Activate();
+        manaRestoreCDTimer.RestartWithOnStart();
     }
 
     public void RestoreHealth()
