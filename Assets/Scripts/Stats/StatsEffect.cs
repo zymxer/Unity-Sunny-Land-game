@@ -42,26 +42,11 @@ public class StatsEffect : MonoBehaviour
     {
         if (type == StatType.MANA)
         {
-            if (speed >= 0.0f)
-            {
-                container.IncreaseMana(speed * timer.GetDelta());
-            }
-            else
-            {
-                container.DecreaseMana(-speed * timer.GetDelta());
-            }
-
+            container.ChangeMana(speed * timer.GetDelta());
         }
         else if (type == StatType.HEALTH)
         {
-            if (speed >= 0.0f)
-            {
-                container.IncreaseHP(speed * timer.GetDelta());
-            }
-            else
-            {
-                container.DecreaseHP(-speed * timer.GetDelta());
-            }
+            container.ChangeHP(speed * timer.GetDelta());
         }
     }
 

@@ -15,12 +15,12 @@ public class StatsUITest : MonoBehaviour
 
     public void DecreaseMana()
     {
-        statsContainer.DecreaseMana(30);
+        statsContainer.ChangeMana(-30);
     }
 
     public void DecreaseHealth()
     {
-        statsContainer.DecreaseHP(20);
+        statsContainer.ChangeHP(-20);
     }
 
     public void DHealthEffect()

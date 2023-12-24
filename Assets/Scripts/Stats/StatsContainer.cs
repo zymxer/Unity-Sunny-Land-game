@@ -94,58 +94,70 @@ public class StatsContainer : MonoBehaviour
         return maxMana;
     }
 
-    public void SetMaxHP()
+    public void SetMaxHP(float value)
+    {
+        maxHealth = value;
+    }
+
+    public void SetMaxMana(float value)
+    {
+        maxMana = value;
+    }
+
+    public void SetHPToMax()
     {
         health = maxHealth;
     }
 
-    public void SetMinHP()
-    {
-        health = 0;
-    }
-
-    public void SetMaxMana()
+    public void SetManaToMax()
     {
         mana = maxMana;
     }
 
-    public void SetMinMana()
+    public void SetHPToMin()
+    {
+        health = 0;
+    }
+
+    public void SetManaToMin()
     {
         mana = 0;
     }
 
 
-    public void IncreaseHP(float value)
+    public void ChangeHP(float value)
     {
         health += value;
-        health = Mathf.Min(health, maxHealth);
+        if(value < 0.0f)
+        {
+            health = Mathf.Max(health, 0);
+            healthRestoreCDTimer.RestartWithOnStart();
+        }
+        else
+        {
+            health = Mathf.Min(health, maxHealth);
+        }
     }
 
-    public void DecreaseHP(float value)
-    {
-        health -= value;
-        health = Mathf.Max(health, 0);
-        healthRestoreCDTimer.RestartWithOnStart();
-    }
-
-    public void IncreaseMana(float value)
+    public void ChangeMana(float value)
     {
         mana += value;
-        mana = Mathf.Min(mana, maxMana);
-    }
-
-    public void DecreaseMana(float value)
-    {
-        mana -= value;
-        mana = Mathf.Max(mana, 0);
-        manaRestoreCDTimer.RestartWithOnStart();
+        if (value < 0.0f)
+        {
+            mana = Mathf.Max(mana, 0);
+            manaRestoreCDTimer.RestartWithOnStart();
+        }
+        else
+        {
+            mana = Mathf.Min(mana, maxMana);
+        }
     }
 
     public void RestoreHealth()
     {
         if(health < maxHealth)
         {
-            IncreaseHP(healthRestoreSpeed * healthRestoreTimer.GetDelta());
+            ChangeHP(healthRestoreSpeed * healthRestoreTimer.GetDelta());
         }
         else
         {
@@ -157,7 +169,7 @@ public class StatsContainer : MonoBehaviour
     {
         if (mana < maxMana)
         {
-            IncreaseMana(manaRestoreSpeed * manaRestoreTimer.GetDelta());
+            ChangeMana(manaRestoreSpeed * manaRestoreTimer.GetDelta());
         }
         else
         {
