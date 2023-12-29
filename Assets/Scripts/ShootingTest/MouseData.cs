@@ -4,14 +4,15 @@ using System;
 using UnityEngine;
 using System.ComponentModel;
 
-public class ClickData : MonoBehaviour
+public class MouseData : MonoBehaviour
 {
-    [SerializeField] private Vector3 position;
-    [SerializeField] private Transform reference;
-    [SerializeField] private bool rotateReference;
-    [SerializeField] private float xDistance;
-    [SerializeField] private float yDistance;
-    [SerializeField] private float distance;
+    [SerializeField]
+    private Transform reference;
+
+    private Vector3 position;
+    private float xDistance;
+    private float yDistance;
+    private float distance;
     [SerializeField] private float angle;
 
     private Vector3 referencePosition;
@@ -20,13 +21,9 @@ public class ClickData : MonoBehaviour
 
     private void Update()
     {
-        //UpdateClickData();
-        if (rotateReference)
-        {
-            RotateReference();
-        }
+        UpdateMouseData();
     }
-    public void UpdateClickData()
+    public void UpdateMouseData()
     {
         referencePosition = reference.position;
         position = Camera.main.ScreenToWorldPoint(Input.mousePosition);
@@ -39,9 +36,19 @@ public class ClickData : MonoBehaviour
         return angle;
     }
 
-    private void RotateReference()
+    public float Distance()
     {
-        reference.eulerAngles = new Vector3(0f, 0f, angle); //вместо этого надо ротейт с умной дельтой какой-то
+        return distance;
+    }
+
+    public Vector2 GetMousePosition()
+    {
+        return position;
+    }
+
+    public void SetTransform(Transform newTransform)
+    {
+        reference = newTransform;
     }
 
     private void CalculateDistance()

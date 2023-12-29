@@ -12,7 +12,7 @@ public class StatsEffect : MonoBehaviour
 
     private Timer timer;
 
-    public static void AddEffect(GameObject target, StatType type, float speed, float duration)
+    public static StatsEffect AddEffect(GameObject target, StatType type, float speed, float duration)
     {
         if (target.GetComponent<StatsContainer>() != null)
         {
@@ -22,7 +22,9 @@ public class StatsEffect : MonoBehaviour
             effectObject.AddComponent<StatsEffect>();
             effectObject.AddComponent<Timer>();
             effectObject.GetComponent<StatsEffect>().StartEffect(target, type, speed, duration);
+            return effectObject.GetComponent<StatsEffect>();
         }
+        return null;
     }
 
     public void StartEffect(GameObject target, StatType type, float speed, float duration)
@@ -32,10 +34,15 @@ public class StatsEffect : MonoBehaviour
         this.duration = duration;
         container = target.GetComponent<StatsContainer>();
         timer = GetComponent<Timer>();
-        timer.ResetValue(duration);
+        timer.SetTimer(duration);
         timer.OnValueChanged().AddListener(OnTimerChange);
         timer.OnEnd().AddListener(OnTimerEnd);
         timer.Activate();
+    }
+
+    public void StopEffect()
+    {
+        timer.End();
     }
 
     private void OnTimerChange()

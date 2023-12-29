@@ -10,7 +10,7 @@ public class PlayerPhysics : MonoBehaviour
 {
     [Header("Movement parameters")]
 
-    private float moveSpeed;
+    private Moving moving;
 
     [Space(10)]
     [Range(0.01f, 100.0f)]
@@ -44,7 +44,7 @@ public class PlayerPhysics : MonoBehaviour
 
     void Start()
     {
-        moveSpeed = GetComponent<Moving>().Speed;
+        moving = GetComponent<Moving>();
 
         startPosition = transform.position;
         scale = transform.localScale;
@@ -75,32 +75,32 @@ public class PlayerPhysics : MonoBehaviour
             }
 
 
-            if (Input.GetKeyDown(KeyCode.RightArrow) || Input.GetKeyDown(KeyCode.D))
-            {
-                if (!isFacingRight)
-                {
-                    Rotate();
-                }
-            }
-            if (Input.GetKeyDown(KeyCode.LeftArrow) || Input.GetKeyDown(KeyCode.A))
-            {
-                if (isFacingRight)
-                {
-                    Rotate();
-                }
-            }
+            //if (Input.GetKeyDown(KeyCode.RightArrow) || Input.GetKeyDown(KeyCode.D))
+            //{
+            //    if (!isFacingRight)
+            //    {
+            //        Rotate();
+            //    }
+            //}
+            //if (Input.GetKeyDown(KeyCode.LeftArrow) || Input.GetKeyDown(KeyCode.A))
+            //{
+            //    if (isFacingRight)
+            //    {
+            //        Rotate();
+            //    }
+            //}
 
             if (Input.GetKey(KeyCode.RightArrow) || Input.GetKey(KeyCode.D))
             {
                 isWalking = true;
                 playerGraphics.SetWalking(true);
-                transform.Translate(moveSpeed * Time.deltaTime, 0.0f, 0.0f, Space.World);
+                transform.Translate(moving.Speed * Time.deltaTime, 0.0f, 0.0f, Space.World);
             }
             if (Input.GetKey(KeyCode.LeftArrow) || Input.GetKey(KeyCode.A))
             {
                 isWalking = true;
                 playerGraphics.SetWalking(true);
-                transform.Translate(-moveSpeed * Time.deltaTime, 0.0f, 0.0f, Space.World);
+                transform.Translate(-moving.Speed * Time.deltaTime, 0.0f, 0.0f, Space.World);
             }
 
             if (Input.GetKeyUp(KeyCode.RightArrow) || Input.GetKeyUp(KeyCode.D) || Input.GetKeyUp(KeyCode.LeftArrow) || Input.GetKeyUp(KeyCode.A))
@@ -131,6 +131,11 @@ public class PlayerPhysics : MonoBehaviour
     {
         return isGrounded;
     }    
+
+    public bool IsFacingRight()
+    {
+        return isFacingRight;
+    }
 
     private void StartJump()
     {

@@ -5,7 +5,7 @@ using UnityEngine;
 public class ShootOnClick : MonoBehaviour
 {
     [SerializeField]
-    private ClickData clickData;
+    private MouseData mouseData;
     [SerializeField]
     private GameObject projectilePrefab;
     private GameObject cloneProjectile;
@@ -22,14 +22,14 @@ public class ShootOnClick : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        clickData.UpdateClickData();
+        mouseData.UpdateMouseData();
         if (Input.GetMouseButtonDown(0)) 
         {
-            shotPosition = shotPoint.transform.position;// (transform.position);
+            shotPosition = shotPoint.transform.position;
             cloneProjectile = Instantiate(projectilePrefab, shotPosition, Quaternion.identity);
 
-            cloneProjectile.transform.eulerAngles = new Vector3(0f, 0f, clickData.Angle());
-            cloneProjectile.GetComponent<Projectile>().SetAxisSpeed(clickData.Angle());
+            cloneProjectile.transform.eulerAngles = new Vector3(0f, 0f, mouseData.Angle());
+            cloneProjectile.GetComponent<Projectile>().SetProjectile(mouseData.Angle());
         }
     }
 }

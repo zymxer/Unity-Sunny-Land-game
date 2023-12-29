@@ -1741,10 +1741,7 @@ PrefabInstance:
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
-    m_AddedComponents:
-    - targetCorrespondingSourceObject: {fileID: 910962738111570854, guid: 5b0ce39d190992f4abe6b71b835c41f2, type: 3}
-      insertIndex: -1
-      addedObject: {fileID: 1957421510}
+    m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 5b0ce39d190992f4abe6b71b835c41f2, type: 3}
 --- !u!1 &1780718946
 GameObject:
@@ -1862,24 +1859,6 @@ GameObject:
   m_CorrespondingSourceObject: {fileID: 910962738111570854, guid: 5b0ce39d190992f4abe6b71b835c41f2, type: 3}
   m_PrefabInstance: {fileID: 1685142445}
   m_PrefabAsset: {fileID: 0}
---- !u!114 &1957421510
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1957421500}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: b5573a2ec7d10d64485bd2ce358d7344, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  health: 100
-  mana: 100
-  healthRestoreCooldown: 3
-  healthRestoreSpeed: 5
-  manaRestoreCooldown: 4
-  manaRestoreSpeed: 10
 --- !u!1 &2021998087
 GameObject:
   m_ObjectHideFlags: 0

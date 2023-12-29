@@ -18,4 +18,14 @@ public class Moving : MonoBehaviour
             speed = value;
         }
     }
+
+    public void SpeedUp(float ratio)
+    {
+        speed *= ratio;
+    }
+
+    public void SlowDown(float ratio)
+    {
+        speed /= ratio;
+    }
 }

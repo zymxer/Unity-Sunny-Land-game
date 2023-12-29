@@ -4,8 +4,7 @@ using UnityEngine;
 
 public class Projectile : MonoBehaviour
 {
-    [SerializeField]
-    private float speed = 0.0f;
+    private Moving moving;
 
     private float targetAngle = 0.0f;
     private float radians = 0.0f;
@@ -14,8 +13,9 @@ public class Projectile : MonoBehaviour
 
     private Rigidbody2D _rigidbody;
 
-    private void Start()
+    private void Awake()
     {
+        moving = GetComponent<Moving>();
         _rigidbody = GetComponent<Rigidbody2D>();
     }
 
@@ -24,17 +24,23 @@ public class Projectile : MonoBehaviour
         transform.Translate(speedX * Time.deltaTime, speedY * Time.deltaTime, 0.0f, Space.World);
     }
 
-    public void SetAxisSpeed(float angle)
+    public void SetProjectile(float angle)
     {
         targetAngle = angle;
         radians = targetAngle * Mathf.Deg2Rad;
-        speedX = speed * Mathf.Cos(radians);
-        speedY = speed * Mathf.Sin(radians);
+        speedX = moving.Speed * Mathf.Cos(radians);
+        speedY = moving.Speed * Mathf.Sin(radians);
+    }
+
+    public void StopProjectile()
+    {
+        speedX = 0.0f;
+        speedY = 0.0f;
     }
 
     private void OnTriggerEnter2D(Collider2D collision)
     {
-        if (collision.gameObject.CompareTag("DestroyTrigger") || collision.gameObject.CompareTag("World"))
+        if (collision.gameObject.CompareTag("DestroyTrigger"))
         {
             Destroy(gameObject);
         }

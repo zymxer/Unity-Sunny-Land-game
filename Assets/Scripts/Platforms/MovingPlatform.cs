@@ -7,9 +7,8 @@ public class MovingPlatform : MonoBehaviour
 {
     private enum MoveMode { Horizontal, Vertical, Trajectory };
 
-    [Header("< 10 for Horizontal/Vertical, > 50 for Trajectory")]
-    [SerializeField]
-    private float speed = 0.0f;
+    private Moving moving;
+
     [Header("True for Right/Up")]
     [SerializeField]
     private bool startDirection = true;
@@ -51,6 +50,7 @@ public class MovingPlatform : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
+        moving = GetComponent<Moving>();
         points = new Vector2[waypoints.Length]; 
         for(int i = 0; i < waypoints.Length; i++)
         {
@@ -73,13 +73,13 @@ public class MovingPlatform : MonoBehaviour
         switch (moveMode)
         {
             case MoveMode.Horizontal:
-                transform.Translate(speed * Time.deltaTime * direction * localTimeScale, 0.0f, 0.0f, Space.World);
+                transform.Translate(moving.Speed * Time.deltaTime * direction * localTimeScale, 0.0f, 0.0f, Space.World);
                 break;
             case MoveMode.Vertical:
-                transform.Translate(0.0f, speed * Time.deltaTime * direction * localTimeScale, 0.0f, Space.World);
+                transform.Translate(0.0f, moving.Speed * Time.deltaTime * direction * localTimeScale, 0.0f, Space.World);
                 break;
             case MoveMode.Trajectory:
-                transform.position = Vector2.MoveTowards(transform.position, points[pointIndex], speed * Time.deltaTime * localTimeScale);
+                transform.position = Vector2.MoveTowards(transform.position, points[pointIndex], moving.Speed * Time.deltaTime * localTimeScale);
                 if(CheckPointIndex())
                 {
                     UpdatePointIndex();
@@ -88,7 +88,6 @@ public class MovingPlatform : MonoBehaviour
             default: break;
 
         }
-        UpdateDeltas();
         CheckDirection();
     }
 
@@ -169,24 +168,9 @@ public class MovingPlatform : MonoBehaviour
         deltaY = transform.position.y - prevPosition.y;
     }
 
-    public float SpeedX()
+    public float Speed()
     {
-        return speed * direction;
-    }
-    public float SpeedY()
-    {
-        //return _speed * _direction;
-        return DeltaY() / Time.deltaTime;
-    }
-
-    public void SlowDown(float ratio)
-    {
-        localTimeScale /= ratio;
-    }
-
-    public void SpeedUp(float ratio)
-    {
-        localTimeScale *= ratio;
+        return moving.Speed * direction;
     }
 
     public float DeltaX()

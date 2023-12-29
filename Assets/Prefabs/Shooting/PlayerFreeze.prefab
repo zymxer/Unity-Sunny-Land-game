@@ -12,12 +12,13 @@ GameObject:
   - component: {fileID: 8510859561109029942}
   - component: {fileID: 379738155325860919}
   - component: {fileID: 8319726381025893388}
+  - component: {fileID: 1622082511177772109}
   - component: {fileID: 4781813743775437706}
-  - component: {fileID: 6518205556286669662}
-  - component: {fileID: 3437618623014832570}
+  - component: {fileID: 6502835120670230475}
+  - component: {fileID: 158110579111431028}
   m_Layer: 0
-  m_Name: Stasis
-  m_TagString: Untagged
+  m_Name: PlayerFreeze
+  m_TagString: Projectile
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -161,6 +162,19 @@ Rigidbody2D:
   m_SleepingMode: 1
   m_CollisionDetection: 1
   m_Constraints: 0
+--- !u!114 &1622082511177772109
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8331470393305192576}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9f8882d53bf955e4d80c3674d32d9623, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  speed: 9
 --- !u!114 &4781813743775437706
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -173,8 +187,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 3c518d24d85d59448bd0f5ae54b25522, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  speed: 9
---- !u!114 &6518205556286669662
+--- !u!114 &6502835120670230475
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -183,14 +196,14 @@ MonoBehaviour:
   m_GameObject: {fileID: 8331470393305192576}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 1f564f33bc810de499fa63fbce30887a, type: 3}
+  m_Script: {fileID: 11500000, guid: 7f6555ad55344b54d81fccebbc04505c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  slowRatio: 10
-  color: {r: 0, g: 0.5900979, b: 1, a: 1}
+  slowRatio: 2
+  color: {r: 0.2946778, g: 0.42456013, b: 0.8113208, a: 1}
   duration: 5
-  timer: {fileID: 3437618623014832570}
---- !u!114 &3437618623014832570
+  affectsPlayer: 0
+--- !u!114 &158110579111431028
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -199,9 +212,10 @@ MonoBehaviour:
   m_GameObject: {fileID: 8331470393305192576}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 019de608f2423ee4694883e863dd1036, type: 3}
+  m_Script: {fileID: 11500000, guid: 0761b3b3b5c500441bb4f984911cb44c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  value: 4
-  isActive: 0
-  isContinuous: 0
+  cost: 20
+  continuous: 0
+  cooldown: 1.5
+  type: 1

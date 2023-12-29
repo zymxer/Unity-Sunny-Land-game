@@ -25,7 +25,7 @@ public class StatsUITest : MonoBehaviour
 
     public void DHealthEffect()
     {
-        StatsEffect.AddEffect(target, StatType.HEALTH, -5, 3);
+        StatsEffect.AddEffect(target, StatType.HEALTH, -5, 10000);
     }
 
     private void Update()

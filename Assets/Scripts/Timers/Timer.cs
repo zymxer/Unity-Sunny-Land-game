@@ -16,6 +16,7 @@ public class Timer : MonoBehaviour
     private float prevoiosValue;
     private float delta;
     private bool toDelete = false;
+    private float slowDownRatio = 1.0f;
 
     private void Start()
     {
@@ -57,12 +58,14 @@ public class Timer : MonoBehaviour
     {
         startValue *= ratio;
         value *= ratio;
+        slowDownRatio = ratio;
     }
 
     public void SpeedUp(float ratio)
     {
         startValue /= ratio;
         value /= ratio;
+        slowDownRatio = 1.0f;
     }
 
     public float GetDelta()
@@ -73,7 +76,7 @@ public class Timer : MonoBehaviour
     public void UpdateDelta()
     {
         delta = prevoiosValue - value;
-        delta = Mathf.Max(delta, 0.0f);
+        delta = Mathf.Max(delta, 0.0f) / slowDownRatio;
         prevoiosValue = value;
     }
 

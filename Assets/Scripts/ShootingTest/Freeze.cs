@@ -2,8 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-[RequireComponent(typeof(Timer))]
-public class Stasis : MonoBehaviour
+public class Freeze : MonoBehaviour
 {
     [SerializeField]
     private float slowRatio = 2.0f;
@@ -13,21 +12,26 @@ public class Stasis : MonoBehaviour
     [SerializeField]
     private float duration = 1.0f;
 
-    private GameObject target;
     [SerializeField]
+    private bool affectsPlayer;
+
+    private GameObject target;
     private Timer timer;
 
     private static ArrayList affectedObjects = new ArrayList();
     // Start is called before the first frame update
     void Start()
     {
+        timer = gameObject.AddComponent<Timer>();
+        timer.SetTimer(duration);
         timer.OnStart().AddListener(OnTimerStart);
         timer.OnEnd().AddListener(OnTimerEnd);
     }
 
     private void OnTriggerEnter2D(Collider2D collision)
     {
-        if (!collision.gameObject.CompareTag("Player") && !collision.gameObject.CompareTag("PlatformTop"))
+        if ((!collision.gameObject.CompareTag("Player") || (collision.gameObject.CompareTag("Player") && affectsPlayer)) 
+            && !collision.gameObject.CompareTag("World"))
         {
             target = collision.gameObject;
             if(!affectedObjects.Contains(target))
@@ -88,10 +92,10 @@ public class Stasis : MonoBehaviour
         {
             if(target.GetComponent<SpriteRenderer>() != null) //for test
             target.GetComponent<SpriteRenderer>().color = color;
-            MovingPlatform movingPlatform = target.GetComponent<MovingPlatform>();
-            if (movingPlatform != null)
+            Moving moving = target.GetComponent<Moving>();
+            if (moving != null)
             {
-                movingPlatform.SlowDown(slowRatio);
+                moving.SlowDown(slowRatio);
             }
         }
         // more and more
@@ -102,10 +106,10 @@ public class Stasis : MonoBehaviour
         if(target != null)
         {
             target.GetComponent<SpriteRenderer>().color = Color.white;
-            MovingPlatform movingPlatform = target.GetComponent<MovingPlatform>();
-            if (movingPlatform != null)
+            Moving moving = target.GetComponent<Moving>();
+            if (moving != null)
             {
-                movingPlatform.SpeedUp(slowRatio);
+                moving.SpeedUp(slowRatio);
             }
         }
     }
