@@ -36,6 +36,11 @@ public class MouseData : MonoBehaviour
         return angle;
     }
 
+    public float Radians()
+    {
+        return radians;
+    }
+
     public float Distance()
     {
         return distance;

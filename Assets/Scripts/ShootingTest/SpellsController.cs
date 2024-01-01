@@ -14,12 +14,13 @@ public class SpellsController : MonoBehaviour
     [SerializeField]
     private Transform shotPoint;
 
-    public Spell[] spells;
-    public StatsContainer playerStats;
-    public Spell selectedSpell;
-    public int selectedSpellIndex;
-    public Timer[] cooldowns;
-    public Vector3 shotPosition;
+    private Spell[] spells;
+    private StatsContainer playerStats;
+    private Spell selectedSpell;
+    private int selectedSpellIndex;
+    private Timer[] cooldowns;
+    private Vector3 shotPosition;
+    private Spell continuousSpell;
 
     public static SpellsController instance = null;
 
@@ -73,8 +74,26 @@ public class SpellsController : MonoBehaviour
                     projectile.GetComponent<Projectile>().SetProjectile(mouseData.Angle());
                     projectile.GetComponent<Spell>().SetSpell(this, player, playerStats, selectedSpellIndex);
                     projectile.GetComponent<Spell>().CastSpell();
-                    
                 }   
+                else if(selectedSpell.Type == SpellType.Fire)
+                {
+                    GameObject firePrefab = selectedSpell.gameObject, fire;
+                    shotPosition = shotPoint.transform.position;
+
+                    fire = Instantiate(firePrefab, shotPosition, Quaternion.identity);
+                    fire.GetComponent<Fire>().SetFire(mouseData, shotPoint, player.GetComponent<BoxCollider2D>());
+                    fire.GetComponent<Spell>().SetSpell(this, player, playerStats, selectedSpellIndex);
+                    fire.GetComponent<Spell>().CastSpell();
+                    continuousSpell = fire.GetComponent<Spell>();
+                }
+            }
+        }
+        else if(Input.GetMouseButtonUp(0))
+        {
+            if(continuousSpell != null)
+            {
+                continuousSpell.StopSpell();
+                continuousSpell = null;
             }
         }
     }
@@ -108,7 +127,11 @@ public class SpellsController : MonoBehaviour
 
     public bool CanCast()
     {
-        return (playerStats.Mana >= selectedSpell.Cost && !InCooldown(selectedSpellIndex));
+        if(!selectedSpell.Continuous)
+        {
+            return (playerStats.Mana >= selectedSpell.Cost && !InCooldown(selectedSpellIndex));
+        }
+        return !InCooldown(selectedSpellIndex);
     }
 
     private void ScrollSpellUp()

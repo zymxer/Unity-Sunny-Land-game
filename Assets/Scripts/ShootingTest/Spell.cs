@@ -21,15 +21,6 @@ public class Spell : MonoBehaviour
     private int spellIndex;
     private bool active;
 
-
-    //private void Awake()
-    //{
-    //    controller = SpellsController.instance;
-    //    player = controller.GetPlayer();
-    //    playerStats = player.GetComponent<StatsContainer>();
-    //    spellIndex = controller.GetSpellIndex(this);
-    //}
-
     public void SetSpell(SpellsController controller, GameObject player, StatsContainer playerStats, int index)
     {
         this.controller = controller;
@@ -58,6 +49,11 @@ public class Spell : MonoBehaviour
         get { return spellIndex; }
     }
 
+    public bool Continuous
+    {
+        get { return continuous; }
+    }
+
     public void CastSpell()
     {
         if(continuous)
@@ -78,6 +74,8 @@ public class Spell : MonoBehaviour
         {
             effect.StopEffect();
             controller.StartCooldown(spellIndex);
+            gameObject.GetComponent<ParticleSystem>().Stop();
+            Destroy(gameObject, 4.0f);
         }
     }
 }

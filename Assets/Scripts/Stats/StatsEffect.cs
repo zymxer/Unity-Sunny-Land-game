@@ -42,7 +42,7 @@ public class StatsEffect : MonoBehaviour
 
     public void StopEffect()
     {
-        timer.End();
+        OnTimerEnd();
     }
 
     private void OnTimerChange()
