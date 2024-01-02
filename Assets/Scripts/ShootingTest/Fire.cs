@@ -11,13 +11,10 @@ public class Fire : MonoBehaviour
     [SerializeField]
     private float damage;
     [SerializeField]
-    private float radiusMultiplyer = 3.5f;
+    private float radius = 3.5f;
 
     private Vector3 currentPosition;
-    private BoxCollider2D boxCollider;
-    private CapsuleCollider2D capsuleCollider;
 
-    private float radius;
     private MouseData mouseData;
     private Transform shotPoint;
     private ParticleSystem.MainModule mainModule;
@@ -25,15 +22,13 @@ public class Fire : MonoBehaviour
     private void Start()
     {
         mainModule = GetComponent<ParticleSystem>().main;
-        
+        mainModule.startLifetime = maxDistance / mainModule.startSpeed.constant;
     }
 
-    public void SetFire(MouseData mouseData, Transform shotPoint, BoxCollider2D playerCollider)
+    public void SetFire(MouseData mouseData, Transform shotPoint)
     {
         this.mouseData = mouseData;
         this.shotPoint = shotPoint;
-        boxCollider = playerCollider;
-        radius = playerCollider.size.x * Mathf.Sqrt(2) / radiusMultiplyer; 
     }
 
     private void Update()

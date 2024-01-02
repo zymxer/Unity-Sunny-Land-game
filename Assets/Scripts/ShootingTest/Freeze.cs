@@ -15,6 +15,10 @@ public class Freeze : MonoBehaviour
     [SerializeField]
     private bool affectsPlayer;
 
+    [SerializeField]
+    private GameObject snowParticles;
+
+    ParticleSystem createdSystem;
     private GameObject target;
     private Timer timer;
 
@@ -26,6 +30,7 @@ public class Freeze : MonoBehaviour
         timer.SetTimer(duration);
         timer.OnStart().AddListener(OnTimerStart);
         timer.OnEnd().AddListener(OnTimerEnd);
+        GetComponent<ParticleSystem>().Emit(1);
     }
 
     private void OnTriggerEnter2D(Collider2D collision)
@@ -36,9 +41,24 @@ public class Freeze : MonoBehaviour
             target = collision.gameObject;
             if(!affectedObjects.Contains(target))
             {
+                GameObject snowEffect = Instantiate(snowParticles, target.transform.position, Quaternion.identity);
+                createdSystem = snowEffect.GetComponent<ParticleSystem>();
+                createdSystem.Stop();
+                ParticleSystem.ShapeModule shapeModule = createdSystem.shape;
+                ParticleSystem.MainModule mainModule = createdSystem.main;
+                mainModule.duration = duration + mainModule.startLifetime.constant;
+                snowEffect.transform.parent = target.transform;
+                shapeModule.scale = Vector3.Scale(target.GetComponent<Renderer>().bounds.size, target.transform.localScale);
+                createdSystem.Play();
+                if (target.GetComponent<SpriteRenderer>() != null)
+                {
+                    target.GetComponent<SpriteRenderer>().color = color;
+                }
+
                 gameObject.SetActive(false);
                 affectedObjects.Add(target);
                 timer.Activate();
+
             }
             else
             {
@@ -59,6 +79,7 @@ public class Freeze : MonoBehaviour
         SpeedUpTimers();
         SpeedUpObject();
         timer.Remove();
+        createdSystem.Stop();
         Destroy(gameObject);
     }
 
@@ -90,8 +111,6 @@ public class Freeze : MonoBehaviour
     {
         if(target != null)
         {
-            if(target.GetComponent<SpriteRenderer>() != null) //for test
-            target.GetComponent<SpriteRenderer>().color = color;
             Moving moving = target.GetComponent<Moving>();
             if (moving != null)
             {

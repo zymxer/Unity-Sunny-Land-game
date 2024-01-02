@@ -81,7 +81,7 @@ public class SpellsController : MonoBehaviour
                     shotPosition = shotPoint.transform.position;
 
                     fire = Instantiate(firePrefab, shotPosition, Quaternion.identity);
-                    fire.GetComponent<Fire>().SetFire(mouseData, shotPoint, player.GetComponent<BoxCollider2D>());
+                    fire.GetComponent<Fire>().SetFire(mouseData, shotPoint);
                     fire.GetComponent<Spell>().SetSpell(this, player, playerStats, selectedSpellIndex);
                     fire.GetComponent<Spell>().CastSpell();
                     continuousSpell = fire.GetComponent<Spell>();
