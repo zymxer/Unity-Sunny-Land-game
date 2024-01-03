@@ -175,7 +175,7 @@ public class PlayerPhysics : MonoBehaviour
         if(collision.CompareTag("Bonus"))
         {
             Bonus picked = collision.gameObject.GetComponent<Bonus>();
-            ScoreController.GetController().IncreaseScore(picked.GetPoints());
+            //ScoreController.GetController().IncreaseScore(picked.GetPoints());
             picked.StartPickupAnimation();
         }
         if(collision.CompareTag("Platform"))
@@ -206,7 +206,7 @@ public class PlayerPhysics : MonoBehaviour
             GameObject enemy = collision.gameObject;
             if(transform.position.y > enemy.transform.position.y)
             {
-                ScoreController.GetController().IncreaseScore(enemy.GetComponent<EnemyController>().Points());
+                //ScoreController.GetController().IncreaseScore(enemy.GetComponent<EnemyController>().Points());
                 GameManager.instance.UpdateEnemies();
                 collision.enabled = false;
             }
@@ -222,7 +222,7 @@ public class PlayerPhysics : MonoBehaviour
             //audioSource.PlayOneShot(keySound, AudioListener.volume);
             //keysFound++;
             collision.gameObject.SetActive(false);
-            GameManager.instance.AddKeys();
+            //GameManager.instance.AddKeys();
         }
         if (collision.CompareTag("Heart"))
         {

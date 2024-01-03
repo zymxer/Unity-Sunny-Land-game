@@ -4881,7 +4881,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   cost: 1
   continuous: 0
-  cooldown: 0.1
+  cooldown: 2
   type: 1
 --- !u!199 &1529518210157942184
 ParticleSystemRenderer:

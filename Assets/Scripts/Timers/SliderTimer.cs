@@ -3,22 +3,43 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 
-[RequireComponent(typeof(Timer))]
+[RequireComponent(typeof(Slider))]
 public class SliderTimer : MonoBehaviour
 {
+    //[SerializeField]
+    //private float duration;
 
     private Slider slider;
     private Timer timer;
     
     void Start()
     {
-        timer = GetComponent<Timer>();
+        //timer = gameObject.AddComponent<Timer>();
         slider = GetComponent<Slider>();
         slider.minValue = 0f;
-        slider.maxValue = timer.GetValue();
-        slider.value = timer.GetValue();
+        //timer.SetTimer(duration);
+        //slider.minValue = 0f;
+        //slider.maxValue = timer.GetValue();
+        //slider.value = timer.GetValue();
     }
-    
+
+    public void SetTimerSlider(float duration)
+    {
+        timer = gameObject.AddComponent<Timer>();
+        timer.SetTimer(duration);
+        slider.maxValue = timer.GetValue();
+        //slider.value = timer.GetValue();
+        slider.value = 0f;
+    }
+
+    public void SetTimerSlider(Timer timer)
+    {
+        this.timer = timer;
+        slider.maxValue = timer.GetValue();
+        //slider.value = timer.GetValue();
+        slider.value = 0f;
+    }
+
     void Update()
     {
         if (timer.IsActive())
@@ -47,7 +68,7 @@ public class SliderTimer : MonoBehaviour
         timer.SetContinuous(!timer.IsContinuous());
     }
     
-    public void Reset()
+    public void ResetTimer()
     {
         timer.ResetTimer();
         slider.value = timer.GetValue();

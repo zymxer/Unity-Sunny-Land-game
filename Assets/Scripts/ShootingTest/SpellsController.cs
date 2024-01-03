@@ -98,6 +98,16 @@ public class SpellsController : MonoBehaviour
         }
     }
 
+    public int SelectedSpellIndex
+    {
+        get { return selectedSpellIndex; }
+    }
+
+    public Timer GetCooldownTimer(int i)
+    {
+        return cooldowns[i];
+    }
+
     public int GetSpellIndex(Spell spell)
     {
         for(int i = 0; i < spells.Length; i++)

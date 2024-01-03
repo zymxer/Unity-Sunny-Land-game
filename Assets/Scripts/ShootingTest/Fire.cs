@@ -18,6 +18,9 @@ public class Fire : MonoBehaviour
     private MouseData mouseData;
     private Transform shotPoint;
     private ParticleSystem.MainModule mainModule;
+    private List<GameObject> affectedObjects = new List<GameObject>();
+    private List<Timer> affectedObjectsTimers = new List<Timer>();
+
 
     private void Start()
     {
@@ -36,7 +39,7 @@ public class Fire : MonoBehaviour
         gameObject.transform.eulerAngles = new Vector3(0f, 0f, mouseData.Angle());
         currentPosition = shotPoint.position;
         currentPosition.x += radius * Mathf.Cos(mouseData.Radians());
-        currentPosition.y += radius * Mathf.Sin(mouseData.Radians());
+        currentPosition.y += radius * Mathf.Sin(mouseData.Radians()) * Mathf.Sign(mouseData.Angle());
         transform.position = currentPosition;
     }
 
@@ -45,7 +48,31 @@ public class Fire : MonoBehaviour
         StatsContainer stats = other.GetComponent<StatsContainer>();
         if (stats != null) 
         {
-            StatsEffect.AddEffect(other, StatType.HEALTH, damage, effectDuration);
+            if(!affectedObjects.Contains(other))
+            {
+                affectedObjects.Add(other);
+                StatsEffect.AddEffect(other, StatType.HEALTH, -damage, effectDuration);
+                Timer effectTimer = gameObject.AddComponent<Timer>();
+                effectTimer.SetTimer(effectDuration);
+                effectTimer.OnEnd().AddListener(OnAffectedTimerEnd);
+                effectTimer.Activate();
+                affectedObjectsTimers.Add(effectTimer);
+            }
+        }
+    }
+
+    private void OnAffectedTimerEnd()
+    {
+        for (int i = affectedObjects.Count - 1; i >= 0; i--)
+        {
+            if (affectedObjectsTimers[i].GetValue() <= 0.0f)
+            {
+                Timer timer = affectedObjectsTimers[i];
+                affectedObjectsTimers[i].Remove();
+                affectedObjects.RemoveAt(i);
+                affectedObjectsTimers.RemoveAt(i);
+                Destroy(timer);
+            }
         }
     }
 }

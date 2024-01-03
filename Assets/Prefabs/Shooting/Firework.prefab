@@ -14669,5 +14669,5 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   cost: 1
   continuous: 0
-  cooldown: 0.1
+  cooldown: 1
   type: 0
