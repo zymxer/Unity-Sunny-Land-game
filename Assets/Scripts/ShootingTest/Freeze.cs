@@ -35,34 +35,37 @@ public class Freeze : MonoBehaviour
 
     private void OnTriggerEnter2D(Collider2D collision)
     {
-        if ((!collision.gameObject.CompareTag("Player") || (collision.gameObject.CompareTag("Player") && affectsPlayer)) 
-            && !collision.gameObject.CompareTag("World"))
+        if(!collision.isTrigger)
         {
-            target = collision.gameObject;
-            if(!affectedObjects.Contains(target))
+            if ((!collision.gameObject.CompareTag("Player") || (collision.gameObject.CompareTag("Player") && affectsPlayer))
+                && !collision.gameObject.CompareTag("World"))
             {
-                GameObject snowEffect = Instantiate(snowParticles, target.transform.position, Quaternion.identity);
-                createdSystem = snowEffect.GetComponent<ParticleSystem>();
-                createdSystem.Stop();
-                ParticleSystem.ShapeModule shapeModule = createdSystem.shape;
-                ParticleSystem.MainModule mainModule = createdSystem.main;
-                mainModule.duration = duration + mainModule.startLifetime.constant;
-                snowEffect.transform.parent = target.transform;
-                shapeModule.scale = Vector3.Scale(target.GetComponent<Renderer>().bounds.size, target.transform.localScale);
-                createdSystem.Play();
-                if (target.GetComponent<SpriteRenderer>() != null)
+                target = collision.gameObject;
+                if (!affectedObjects.Contains(target))
                 {
-                    target.GetComponent<SpriteRenderer>().color = color;
+                    GameObject snowEffect = Instantiate(snowParticles, target.transform.position, Quaternion.identity);
+                    createdSystem = snowEffect.GetComponent<ParticleSystem>();
+                    createdSystem.Stop();
+                    ParticleSystem.ShapeModule shapeModule = createdSystem.shape;
+                    ParticleSystem.MainModule mainModule = createdSystem.main;
+                    mainModule.duration = duration + mainModule.startLifetime.constant;
+                    snowEffect.transform.parent = target.transform;
+                    shapeModule.scale = Vector3.Scale(target.GetComponent<Renderer>().bounds.size, target.transform.localScale);
+                    createdSystem.Play();
+                    if (target.GetComponent<SpriteRenderer>() != null)
+                    {
+                        target.GetComponent<SpriteRenderer>().color = color;
+                    }
+
+                    gameObject.SetActive(false);
+                    affectedObjects.Add(target);
+                    timer.Activate();
+
                 }
-
-                gameObject.SetActive(false);
-                affectedObjects.Add(target);
-                timer.Activate();
-
-            }
-            else
-            {
-                Destroy(gameObject);
+                else
+                {
+                    Destroy(gameObject);
+                }
             }
         }
     }

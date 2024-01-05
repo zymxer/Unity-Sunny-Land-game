@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System;
 using UnityEngine;
 using System.ComponentModel;
+using UnityEngine.UI;
 
 public class MouseData : MonoBehaviour
 {
@@ -78,5 +79,4 @@ public class MouseData : MonoBehaviour
             angle *= -1;
         }
     }
-
 }

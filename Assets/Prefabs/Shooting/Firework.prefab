@@ -14641,7 +14641,7 @@ MonoBehaviour:
   duration: 0.6
   burstDuration: 0.6
   radiusIncSpeed: 1.1
-  damage: 1
+  damage: 25
   affectsPlayer: 0
 --- !u!114 &2873971524849079614
 MonoBehaviour:

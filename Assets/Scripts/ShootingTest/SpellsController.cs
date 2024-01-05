@@ -55,14 +55,16 @@ public class SpellsController : MonoBehaviour
         if (Input.GetAxis("Mouse ScrollWheel") > 0f)
         {
             ScrollSpellUp();
+            GameplayUI.instance.UpdateSpellImages();
         }
         else if (Input.GetAxis("Mouse ScrollWheel") < 0f)
         {
             ScrollSpellDown();
+            GameplayUI.instance.UpdateSpellImages();
         }
         else if(Input.GetMouseButtonDown(0))
         {
-            if(CanCast())
+            if (CanCast())
             {
                 if (selectedSpell.Type == SpellType.Firework || selectedSpell.Type == SpellType.Freeze)
                 {
@@ -74,8 +76,8 @@ public class SpellsController : MonoBehaviour
                     projectile.GetComponent<Projectile>().SetProjectile(mouseData.Angle());
                     projectile.GetComponent<Spell>().SetSpell(this, player, playerStats, selectedSpellIndex);
                     projectile.GetComponent<Spell>().CastSpell();
-                }   
-                else if(selectedSpell.Type == SpellType.Fire)
+                }
+                else if (selectedSpell.Type == SpellType.Fire)
                 {
                     GameObject firePrefab = selectedSpell.gameObject, fire;
                     shotPosition = shotPoint.transform.position;
@@ -88,13 +90,10 @@ public class SpellsController : MonoBehaviour
                 }
             }
         }
+
         else if(Input.GetMouseButtonUp(0))
         {
-            if(continuousSpell != null)
-            {
-                continuousSpell.StopSpell();
-                continuousSpell = null;
-            }
+            StopContinuousSpell();
         }
     }
 
@@ -106,6 +105,15 @@ public class SpellsController : MonoBehaviour
     public Timer GetCooldownTimer(int i)
     {
         return cooldowns[i];
+    }
+
+    public void StopContinuousSpell()
+    {
+        if (continuousSpell != null)
+        {
+            continuousSpell.StopSpell();
+            continuousSpell = null;
+        }
     }
 
     public int GetSpellIndex(Spell spell)

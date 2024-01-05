@@ -15,13 +15,10 @@ public class GameManager : MonoBehaviour
     [SerializeField]
     private GameplayUI gameplayUI;
 
-    [SerializeField]
-    private TMP_Text qualityText;
-
     const string keyHighScore = "HighScoreLevel1";
 
     private int lives = 3;
-    private int points = 0;
+    private int score = 0;
     private int enemiesKilled = 0;
     private int keysFound = 0;
 
@@ -40,8 +37,6 @@ public class GameManager : MonoBehaviour
             instance = this;
         }
 
-        InGame();
-
         timer = gameObject.AddComponent<Timer>();
         timer.OnValueChanged().AddListener(OnTimerChange);
         timer.SetTimer(10000, true, false);
@@ -55,8 +50,13 @@ public class GameManager : MonoBehaviour
 
     private void Start()
     {
+        InGame();
+
         gameplayUI.UpdateLivesImages();
         gameplayUI.UpdateKeysImages();
+        gameplayUI.UpdateScore(score);
+        gameplayUI.UpdateEnemiesKilled(enemiesKilled);
+
     }
 
     private void Update()
@@ -67,11 +67,6 @@ public class GameManager : MonoBehaviour
         }
     }
 
-    //public void SetVolume()
-    //{
-    //    AudioListener.volume = volumeSlider.value;
-    //}
-
     public int Lives
     {
         get { return lives; }
@@ -80,6 +75,38 @@ public class GameManager : MonoBehaviour
     public int KeysFound
     {
         get { return keysFound; }
+    }
+
+    public int Score
+    {
+        get { return score; }
+    }
+
+    public int EnemiesKilled
+    { 
+        get { return enemiesKilled; } 
+    }
+
+    public void IncreaseScore(int value)
+    {
+        score += value;
+        gameplayUI.UpdateScore(score);
+    }
+
+    public void IncreaseEnemiesKilled()
+    {
+        enemiesKilled++;
+        gameplayUI.UpdateEnemiesKilled(enemiesKilled);
+    }
+
+    public void IncreaseKeysAmount()
+    {
+        keysFound++;
+        gameplayUI.UpdateKeysImages();
+    }
+    public void SetVolume()
+    {
+        AudioListener.volume = gameplayUI.VolumeSliderValue();
     }
 
     public string TimeToString()
@@ -95,51 +122,22 @@ public class GameManager : MonoBehaviour
     {
         minutes = (int)timer.TimePast() / 60;
         seconds = (int)timer.TimePast() % 60;
-        //timerText.text = timer.TimePast().ToString();
-        //timerText.text = string.Format("{0:00}:{1:00}", minutes, seconds);
     }
-
-    public void UpdateEnemies()
-    {
-        enemiesKilled++;
-        //enemiesText.text = enemiesKilled.ToString();
-    }
-
-    //public void AddKeys()
-    //{
-    //    keysTab[keysFound++].color = Color.white;
-    //}
 
     public void IncreaseQuality()
     {
         QualitySettings.IncreaseLevel();
-        qualityText.text = QualitySettings.names[QualitySettings.GetQualityLevel()];
     }
 
     public void DecreaseQuality()
     {
         QualitySettings.DecreaseLevel();
-        qualityText.text = QualitySettings.names[QualitySettings.GetQualityLevel()];
     }
 
-    //public void EnableLives(int pLives)
-    //{
-    //    for(int i = 0; i < lives.Length; i++)
-    //    {
-    //        if(i < pLives)
-    //        {
-    //            lives[i].enabled = true;
-    //        }
-    //        else
-    //        {
-    //            lives[i].enabled = false;
-    //        }
-    //    }
-    //}
-
-    private void SetGameState(GameState state)
+    public void SetGameState(GameState state)
     {
         currentGameState = state;
+        gameplayUI.ChangeState(currentGameState);
 
         //inGameCanvas.SetActive(currentGameState == GameState.GS_GAME);
         //pauseMenuCanvas.SetActive(currentGameState == GameState.GS_PAUSEMENU);
@@ -158,15 +156,16 @@ public class GameManager : MonoBehaviour
                 //    PlayerPrefs.SetInt(keyHighScore, highScore);
                 //}
             }
-            //scoreText.text = "Your score = " + ScoreController.GetController().GetScore();
-            //highScoreText.text = "The best score = " + highScore;
         }
         if(currentGameState == GameState.GS_GAME)
         {
+            SpellsController.instance.enabled = true;
             Time.timeScale = 1.0f;
         }
         else
         {
+            SpellsController.instance.StopContinuousSpell();
+            SpellsController.instance.enabled = false;
             Time.timeScale = 0.0f;
         }
     }
@@ -184,6 +183,7 @@ public class GameManager : MonoBehaviour
     public void InGame()
     {
         SetGameState(GameState.GS_GAME);
+        gameplayUI.UpdateSpellImages();
     }
     public void LevelCompleted()
     {
@@ -196,7 +196,7 @@ public class GameManager : MonoBehaviour
 
     private void SwitchState()
     {
-        if (currentGameState == GameState.GS_PAUSEMENU)
+        if (currentGameState == GameState.GS_PAUSEMENU || currentGameState == GameState.GS_OPTIONS)
         {
             InGame();
         }
@@ -204,11 +204,6 @@ public class GameManager : MonoBehaviour
         {
             PauseMenu();
         }
-    }
-
-    public void OnResumeButton()
-    {
-        InGame();
     }
 
     public void OnRestartButton()

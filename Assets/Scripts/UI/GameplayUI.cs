@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 using TMPro;
+using UnityEngine.Rendering;
 
 public class GameplayUI : MonoBehaviour
 {
@@ -15,6 +16,16 @@ public class GameplayUI : MonoBehaviour
     [Space(10)]
     [SerializeField]
     private GameObject gameplayPanel;
+    [SerializeField]
+    private GameObject pausePanel;
+    [SerializeField]
+    private GameObject optionsPanel;
+    [SerializeField]
+    private GameObject levelEndPanel;
+    [SerializeField]
+    private GameObject gameOverPanel;
+
+    private GameObject activePanel;
 
     [Header("Stats")]
     [Space(10)]
@@ -43,8 +54,32 @@ public class GameplayUI : MonoBehaviour
     [SerializeField]
     private TMP_Text enemiesText;
 
+    [Header("Settings")]
+    [Space(10)]
+    [SerializeField]
+    private TMP_Text qualityText;
+    [SerializeField]
+    private Slider volumeSlider;
+
+    public static GameplayUI instance = null;
 
     private Image selectedSpellImage;
+
+    private void Awake()
+    {
+        if (instance == null)
+        {
+            instance = this;
+        }
+        
+        activePanel = gameplayPanel;
+
+        selectedSpellImage = spellsImages[0];
+        for (int i = 1; i < spellsImages.Length; i++)
+        {
+            spellsImages[i].color = Color.grey;
+        }
+    }
 
     private void Start()
     {
@@ -56,12 +91,8 @@ public class GameplayUI : MonoBehaviour
             spellsCooldowns[i].SetTimerSlider(spellsController.GetCooldownTimer(i));
         }
 
-        selectedSpellImage = spellsImages[0];
-        selectedSpellImage.color = Color.white;
-        for(int i = 1;  i < spellsImages.Length; i++)
-        {
-            spellsImages[i].color = Color.grey;
-        }
+        UpdateQualityText();
+        UpdateSpellImages();
     }
 
     private void Update()
@@ -71,12 +102,13 @@ public class GameplayUI : MonoBehaviour
 
         timeText.text = GameManager.instance.TimeToString();
 
-        if (Input.GetAxis("Mouse ScrollWheel") != 0.0f)
-        {
-            selectedSpellImage.color = Color.grey;
-            selectedSpellImage = spellsImages[spellsController.SelectedSpellIndex];
-            selectedSpellImage.color = Color.white;
-        }
+    }
+
+    public void UpdateSpellImages()
+    {
+        selectedSpellImage.color = Color.gray;
+        selectedSpellImage = spellsImages[spellsController.SelectedSpellIndex];
+        selectedSpellImage.color = Color.white;
     }
 
     public void UpdateLivesImages()
@@ -93,5 +125,87 @@ public class GameplayUI : MonoBehaviour
         {
             keysImages[i].color = i < GameManager.instance.KeysFound ? Color.white : Color.gray;
         }
+    }
+
+    public void UpdateScore(int value)
+    {
+        scoreText.text = value.ToString();
+    }
+
+    public void UpdateEnemiesKilled(int value)
+    {
+        enemiesText.text = value.ToString();
+    }
+
+    public void ChangeState(GameState state)
+    {
+        activePanel.SetActive(false);
+        switch (state) 
+        {
+            case GameState.GS_GAME:
+                activePanel = gameplayPanel;
+                break;
+            case GameState.GS_PAUSEMENU:
+                activePanel = pausePanel;
+                break;
+            case GameState.GS_OPTIONS:
+                activePanel = optionsPanel;
+                break;
+            case GameState.GS_LEVELCOMPLETED:
+                activePanel = levelEndPanel;
+                break;
+            case GameState.GS_GAME_OVER:
+                activePanel = gameOverPanel;
+                break;
+            default: break;
+        }
+        activePanel.SetActive(true);
+    }
+
+    public void OptionsButton()
+    {
+        GameManager.instance.Options();
+    }
+
+    public void ResumeButton()
+    {
+        GameManager.instance.InGame();
+    }
+
+    public void RestartButton()
+    {
+        GameManager.instance.OnRestartButton();
+    }
+
+    public void ExitButton()
+    {
+        GameManager.instance.OnExitButton();
+    }
+
+    public void IncreaseQualityButton()
+    {
+        GameManager.instance.IncreaseQuality();
+        UpdateQualityText();
+    }
+
+    public void DecreaseQualityButton()
+    {
+        GameManager.instance.DecreaseQuality();
+        UpdateQualityText();
+    }
+
+    public void UpdateQualityText()
+    {
+        qualityText.text = QualitySettings.names[QualitySettings.GetQualityLevel()];
+    }
+
+    public float VolumeSliderValue()
+    {
+        return volumeSlider.value;
+    }
+
+    public void UpdateVolumeLevel()
+    {
+        GameManager.instance.SetVolume();
     }
 }

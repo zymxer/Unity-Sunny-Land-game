@@ -53,6 +53,10 @@ public class StatsEffect : MonoBehaviour
         }
         else if (type == StatType.HEALTH)
         {
+            if(container.Health <= 0.0f)
+            {
+                StopEffect();
+            }
             container.ChangeHP(speed * timer.GetDelta());
         }
     }

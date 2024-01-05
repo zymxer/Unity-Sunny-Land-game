@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
+using Pathfinding;
 
 
 public class StatsUITest : MonoBehaviour
@@ -32,6 +33,7 @@ public class StatsUITest : MonoBehaviour
     {
         manaSlider.value = statsContainer.Mana;
         healthSlider.value = statsContainer.Health;
+
     }
 
     private void Start()

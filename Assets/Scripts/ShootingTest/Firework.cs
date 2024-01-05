@@ -83,23 +83,26 @@ public class Firework : MonoBehaviour
 
     private void OnTriggerEnter2D(Collider2D collision)
     {
-        if ((!collision.gameObject.CompareTag("Player") || (collision.gameObject.CompareTag("Player") && affectsPlayer))
-            && !collision.gameObject.CompareTag("Projectile"))
+        if (!collision.isTrigger)
         {
-            StatsContainer stats = collision.gameObject.GetComponent<StatsContainer>();
-            if (projectileTimer.IsActive())
+            if ((!collision.gameObject.CompareTag("Player") || (collision.gameObject.CompareTag("Player") && affectsPlayer))
+                && !collision.gameObject.CompareTag("Projectile"))
             {
-                projectileTimer.End();
-                if (stats != null)
+                StatsContainer stats = collision.gameObject.GetComponent<StatsContainer>();
+                if (projectileTimer.IsActive())
                 {
-                    stats.ChangeHP(-damage);
+                    projectileTimer.End();
+                    if (stats != null)
+                    {
+                        stats.ChangeHP(-damage);
+                    }
                 }
-            }
-            else
-            {
-                if (stats != null)
+                else
                 {
-                    stats.ChangeHP(-damage);
+                    if (stats != null)
+                    {
+                        stats.ChangeHP(-damage);
+                    }
                 }
             }
         }

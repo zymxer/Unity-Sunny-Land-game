@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Events;
 
 public enum StatType { MANA, HEALTH};
 public class StatsContainer : MonoBehaviour
@@ -12,6 +13,10 @@ public class StatsContainer : MonoBehaviour
     [SerializeField]
     private float mana = 0;
     private float maxMana;
+
+    [Space(10)]
+    [SerializeField]
+    private bool regeterates = false;
 
     [SerializeField]
     private float healthRestoreCooldown;
@@ -31,6 +36,9 @@ public class StatsContainer : MonoBehaviour
     private Timer manaRestoreCDTimer;
     private Timer manaRestoreTimer;
 
+    private UnityEvent onZeroHealth = new UnityEvent();
+    private UnityEvent onFirstHit = new UnityEvent();
+    private bool firstHit = false;
 
     private void Awake()
     {
@@ -40,24 +48,26 @@ public class StatsContainer : MonoBehaviour
 
     private void Start()
     {
+        if(regeterates)
+        {
+            healthRestoreTimer = gameObject.AddComponent<Timer>();
+            healthRestoreTimer.SetTimer(3.0f, true, true);
+            healthRestoreTimer.OnValueChanged().AddListener(RestoreHealth);
 
-        healthRestoreTimer = gameObject.AddComponent<Timer>();
-        healthRestoreTimer.SetTimer(3.0f, true, true);
-        healthRestoreTimer.OnValueChanged().AddListener(RestoreHealth);
+            manaRestoreTimer = gameObject.AddComponent<Timer>();
+            manaRestoreTimer.SetTimer(1.0f, true, true);
+            manaRestoreTimer.OnValueChanged().AddListener(RestoreMana);
 
-        manaRestoreTimer = gameObject.AddComponent<Timer>();
-        manaRestoreTimer.SetTimer(1.0f, true, true);
-        manaRestoreTimer.OnValueChanged().AddListener(RestoreMana);
+            healthRestoreCDTimer = gameObject.AddComponent<Timer>();
+            healthRestoreCDTimer.SetTimer(healthRestoreCooldown);
+            healthRestoreCDTimer.OnStart().AddListener(healthRestoreTimer.Stop);
+            healthRestoreCDTimer.OnEnd().AddListener(healthRestoreTimer.Continue);
 
-        healthRestoreCDTimer = gameObject.AddComponent<Timer>();
-        healthRestoreCDTimer.SetTimer(healthRestoreCooldown);
-        healthRestoreCDTimer.OnStart().AddListener(healthRestoreTimer.Stop);
-        healthRestoreCDTimer.OnEnd().AddListener(healthRestoreTimer.Continue);
-
-        manaRestoreCDTimer = gameObject.AddComponent<Timer>();
-        manaRestoreCDTimer.SetTimer(manaRestoreCooldown);
-        manaRestoreCDTimer.OnStart().AddListener(manaRestoreTimer.Stop);
-        manaRestoreCDTimer.OnEnd().AddListener(manaRestoreTimer.Continue);
+            manaRestoreCDTimer = gameObject.AddComponent<Timer>();
+            manaRestoreCDTimer.SetTimer(manaRestoreCooldown);
+            manaRestoreCDTimer.OnStart().AddListener(manaRestoreTimer.Stop);
+            manaRestoreCDTimer.OnEnd().AddListener(manaRestoreTimer.Continue);
+        }
     }
 
     public float Health
@@ -124,14 +134,35 @@ public class StatsContainer : MonoBehaviour
         mana = 0;
     }
 
+    public UnityEvent OnFirstHit
+    {
+        get { return onFirstHit; }
+    }
+
+    public UnityEvent OnZeroHealth
+    {
+        get { return onZeroHealth; }
+    }
 
     public void ChangeHP(float value)
     {
         health += value;
         if(value < 0.0f)
         {
-            health = Mathf.Max(health, 0);
-            healthRestoreCDTimer.RestartWithOnStart();
+            health = Mathf.Max(health, 0.0f);
+            if (regeterates)
+            {
+                healthRestoreCDTimer.RestartWithOnStart();
+            }
+            if(!firstHit)
+            {
+                firstHit = true;
+                onFirstHit.Invoke();
+            }
+            if(health == 0.0f)
+            {
+                onZeroHealth.Invoke();
+            }
         }
         else
         {
@@ -145,7 +176,10 @@ public class StatsContainer : MonoBehaviour
         if (value < 0.0f)
         {
             mana = Mathf.Max(mana, 0);
-            manaRestoreCDTimer.RestartWithOnStart();
+            if (regeterates)
+            {
+                manaRestoreCDTimer.RestartWithOnStart();
+            }
         }
         else
         {
