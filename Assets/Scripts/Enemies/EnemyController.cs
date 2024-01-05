@@ -1,10 +1,12 @@
 using System.Collections;
 using System.Collections.Generic;
+using Unity.VisualScripting;
 using UnityEditor.Animations;
 using UnityEditor.ShaderGraph.Internal;
 using UnityEngine;
 using UnityEngine.Rendering;
 using UnityEngine.UI;
+using static UnityEditor.ShaderGraph.Internal.KeywordDependentCollection;
 using static UnityEngine.RuleTile.TilingRuleOutput;
 
 public enum AttackType { Melee, Range};
@@ -28,6 +30,8 @@ public class EnemyController : MonoBehaviour
     [Header("For range attack")]
     [SerializeField]
     private GameObject projectilePrefab;
+    [SerializeField]
+    private GameObject shotPoint;
 
     [Space(5)]
     [SerializeField]
@@ -111,7 +115,7 @@ public class EnemyController : MonoBehaviour
                 transform.Translate(moving.Speed * Time.deltaTime * direction, 0.0f, 0.0f, Space.World);
             }
         }
-        else
+        else //pathfinding
         {
             healthSlider.value = stats.Health;
             CheckDirection();
@@ -212,6 +216,16 @@ public class EnemyController : MonoBehaviour
                 StatsEffect.AddEffect(player, StatType.HEALTH, -damage, damageDuration);
             }
         }
+        else if(attackType == AttackType.Range)
+        {
+            GameObject projectile;
+            Vector3 shotPosition = shotPoint.transform.position;
+            float angle = CalculateAngle();
+
+            projectile = Instantiate(projectilePrefab, shotPosition, Quaternion.identity);
+            projectile.transform.eulerAngles = new Vector3(0f, 0f, angle);
+            projectile.GetComponent<Projectile>().SetProjectile(angle);
+        }
         cooldownTimer.Activate();
     }
 
@@ -239,5 +253,27 @@ public class EnemyController : MonoBehaviour
 
         healthSliderScale.x *= -1;
         healthSlider.transform.localScale = healthSliderScale;
+    }
+
+    private float CalculateAngle()
+    {
+        float xDistance, yDistance, distance, cosin, radians, angle;
+
+        xDistance = transform.position.x - player.transform.position.x;
+        yDistance = transform.position.y - player.transform.position.y;
+        distance = Mathf.Sqrt((xDistance * xDistance) + (yDistance * yDistance));
+
+        cosin = xDistance / distance;
+        radians = Mathf.Acos(cosin);
+        angle = radians * Mathf.Rad2Deg;
+
+        if (yDistance < 0)
+        {
+            angle *= -1;
+        }
+
+        angle -= 180.0f;
+
+        return angle;
     }
 }

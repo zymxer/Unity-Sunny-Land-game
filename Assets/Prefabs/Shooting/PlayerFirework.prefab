@@ -9732,7 +9732,7 @@ GameObject:
   - component: {fileID: 2873971524849079614}
   - component: {fileID: 7923862717226608856}
   m_Layer: 0
-  m_Name: Firework
+  m_Name: PlayerFirework
   m_TagString: Projectile
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
