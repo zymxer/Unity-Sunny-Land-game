@@ -15,6 +15,14 @@ public class EnemyPathfinding : MonoBehaviour
     [SerializeField]
     private float nextPointDistance;
 
+    [Space]
+    [SerializeField]
+    private float groundRayLength = 2.0f;
+    [SerializeField]
+    private Transform groundChecker;
+    [SerializeField]
+    public LayerMask groundLayer;
+
     private GameObject player;
     private Transform target;
     private Rigidbody2D rb;
@@ -56,7 +64,9 @@ public class EnemyPathfinding : MonoBehaviour
     {
         if (path != null)
         {
-            if(ReachedEndCheck())
+            //GetComponent<EnemyController>().CheckDirection();
+
+            if (ReachedEndCheck())
             {
                 direction = Vector2.zero;
                 if (!AboveTarget() && canFly)
@@ -65,17 +75,28 @@ public class EnemyPathfinding : MonoBehaviour
                 }
                 return;
             }
+
             direction = ((Vector2)path.vectorPath[currentPoint] - (Vector2)transform.position).normalized;
-            if(!canFly)
+
+
+            if (!canFly)
             {
-                direction.y = 0.0f;
-                if(Mathf.Abs(direction.x) >= 0.05f)
+                if(!isGrounded())
                 {
-                    direction.x = 1.0f * Mathf.Sign(direction.x);
+                    GetComponent<EnemyController>().CheckDirection();
+                    direction = Vector2.zero;
                 }
                 else
                 {
-                    direction.x = 0.0f;
+                    direction.y = 0.0f;
+                    if (Mathf.Abs(direction.x) >= 0.05f)
+                    {
+                        direction.x = Mathf.Sign(direction.x);
+                    }
+                    else
+                    {
+                        direction.x = 0.0f;
+                    }
                 }
             }
 
@@ -146,5 +167,10 @@ public class EnemyPathfinding : MonoBehaviour
         onAttackDistance = path.GetTotalLength() <= attackDistance;
         reachedEnd = (currentPoint >= path.vectorPath.Count) || (onAttackDistance);
         return reachedEnd;
+    }
+
+    private bool isGrounded()
+    {
+        return Physics2D.Raycast(groundChecker.position, Vector2.down, groundRayLength, groundLayer.value);
     }
 }

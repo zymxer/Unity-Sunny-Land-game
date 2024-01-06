@@ -107,7 +107,7 @@ public class EnemyController : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        if(!triggered) //basic movement
+        if (!triggered) //basic movement
         {
             if (moveRange != 0.0f)
             {
@@ -133,7 +133,7 @@ public class EnemyController : MonoBehaviour
         return points;
     }
 
-    private void CheckDirection()
+    public void CheckDirection()
     {
         if(!triggered)
         {
@@ -176,6 +176,10 @@ public class EnemyController : MonoBehaviour
                 direction = 1;
                 Rotate();
             }
+            else if (pathfinding.Direction.x == 0.0f)
+            {
+
+            }
         }
 
     }
@@ -205,7 +209,19 @@ public class EnemyController : MonoBehaviour
 
     private void Attack()
     {
-        if(attackType == AttackType.Melee)
+        if (transform.position.x > player.transform.position.x
+            && transform.localScale.x > 0.0f)
+        {
+            direction = -1;
+            Rotate();
+        }
+        else if (transform.position.x < player.transform.position.x
+            && transform.localScale.x < 0.0f)
+        {
+            direction = 1;
+            Rotate();
+        }
+        if (attackType == AttackType.Melee)
         {
             if(damageType == DamageType.Descrete)
             {
@@ -259,8 +275,8 @@ public class EnemyController : MonoBehaviour
     {
         float xDistance, yDistance, distance, cosin, radians, angle;
 
-        xDistance = transform.position.x - player.transform.position.x;
-        yDistance = transform.position.y - player.transform.position.y;
+        xDistance = shotPoint.transform.position.x - player.transform.position.x;
+        yDistance = shotPoint.transform.position.y - player.transform.position.y;
         distance = Mathf.Sqrt((xDistance * xDistance) + (yDistance * yDistance));
 
         cosin = xDistance / distance;
