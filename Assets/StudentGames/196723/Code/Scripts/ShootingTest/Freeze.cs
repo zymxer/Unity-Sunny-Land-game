@@ -37,36 +37,55 @@ public class Freeze : MonoBehaviour
     {
         if(!collision.isTrigger)
         {
-            if ((!collision.gameObject.CompareTag("Player") || (collision.gameObject.CompareTag("Player") && affectsPlayer))
-                && !collision.gameObject.CompareTag("World"))
+            if(gameObject.CompareTag("World"))
             {
-                target = collision.gameObject;
-                if (!affectedObjects.Contains(target))
-                {
-                    GameObject snowEffect = Instantiate(snowParticles, target.transform.position, Quaternion.identity);
-                    createdSystem = snowEffect.GetComponent<ParticleSystem>();
-                    createdSystem.Stop();
-                    ParticleSystem.ShapeModule shapeModule = createdSystem.shape;
-                    ParticleSystem.MainModule mainModule = createdSystem.main;
-                    mainModule.duration = duration + mainModule.startLifetime.constant;
-                    snowEffect.transform.parent = target.transform;
-                    shapeModule.scale = Vector3.Scale(target.GetComponent<Renderer>().bounds.size, target.transform.localScale);
-                    createdSystem.Play();
-                    if (target.GetComponent<SpriteRenderer>() != null)
-                    {
-                        target.GetComponent<SpriteRenderer>().color = color;
-                    }
+                Destroy(gameObject);
+            }
 
-                    gameObject.SetActive(false);
-                    affectedObjects.Add(target);
-                    timer.Activate();
-
-                }
-                else
+            if(affectsPlayer)
+            {
+                if(!collision.CompareTag("Enemy"))
                 {
-                    Destroy(gameObject);
+                    AddFreezeEffect(collision);
                 }
             }
+            else
+            {
+                if(!collision.CompareTag("Player"))
+                {
+                    AddFreezeEffect(collision);
+                }
+            }
+        }
+    }
+
+    private void AddFreezeEffect(Collider2D collision)
+    {
+        target = collision.gameObject;
+        if (!affectedObjects.Contains(target))
+        {
+            GameObject snowEffect = Instantiate(snowParticles, target.transform.position, Quaternion.identity);
+            createdSystem = snowEffect.GetComponent<ParticleSystem>();
+            createdSystem.Stop();
+            ParticleSystem.ShapeModule shapeModule = createdSystem.shape;
+            ParticleSystem.MainModule mainModule = createdSystem.main;
+            mainModule.duration = duration + mainModule.startLifetime.constant;
+            snowEffect.transform.parent = target.transform;
+            shapeModule.scale = Vector3.Scale(target.GetComponent<Renderer>().bounds.size, target.transform.localScale);
+            createdSystem.Play();
+            if (target.GetComponent<SpriteRenderer>() != null)
+            {
+                target.GetComponent<SpriteRenderer>().color = color;
+            }
+
+            gameObject.SetActive(false);
+            affectedObjects.Add(target);
+            timer.Activate();
+
+        }
+        else
+        {
+            Destroy(gameObject);
         }
     }
 
@@ -120,14 +139,16 @@ public class Freeze : MonoBehaviour
                 moving.SlowDown(slowRatio);
             }
         }
-        // more and more
     }
 
     public void SpeedUpObject()
     {
         if(target != null)
         {
-            target.GetComponent<SpriteRenderer>().color = Color.white;
+            if(target.GetComponent<SpriteRenderer>() != null)
+            {
+                target.GetComponent<SpriteRenderer>().color = Color.white;
+            }
             Moving moving = target.GetComponent<Moving>();
             if (moving != null)
             {

@@ -57,22 +57,16 @@ public class PlayerPhysics : MonoBehaviour
 
         playerGraphics = GetComponent<PlayerGraphics>();
 
+        GetComponent<StatsContainer>().OnZeroHealth.AddListener(GameManager.instance.KillPlayer);
+
     }
 
 
     void Update()
     {
-        //if (GameManager.instance.currentGameState == GameState.GS_GAME)
-        if(true)
+        if (GameManager.instance.currentGameState == GameState.GS_GAME)
         {
-            if (CheckGrounded())
-            {
-                isGrounded = true;
-            }
-            else
-            {
-                isGrounded = false;
-            }
+            isGrounded = CheckGrounded();
 
 
             //if (Input.GetKeyDown(KeyCode.RightArrow) || Input.GetKeyDown(KeyCode.D))
@@ -118,7 +112,7 @@ public class PlayerPhysics : MonoBehaviour
                 StartJump();
             }
 
-            Debug.DrawRay(transform.position, Vector3.down * rayLength, Color.white);
+            //Debug.DrawRay(transform.position, Vector3.down * rayLength, Color.white);
         }
     }
 

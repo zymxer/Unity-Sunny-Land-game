@@ -22,6 +22,8 @@ public class GameManager : MonoBehaviour
 
     const string keyHighScore = "HighScoreLevel1";
 
+    private StatsContainer playerStats;
+
     private int lives = 3;
     private int score = 0;
     private int enemiesKilled = 0;
@@ -51,7 +53,8 @@ public class GameManager : MonoBehaviour
         {
             PlayerPrefs.SetInt(keyHighScore, 0);
         }
-        //qualityText.text = QualitySettings.names[QualitySettings.GetQualityLevel()];
+       
+        playerStats = player.GetComponent<StatsContainer>();
     }
 
     private void Start()

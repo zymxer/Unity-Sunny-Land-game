@@ -47,6 +47,8 @@ public class EnemyController : MonoBehaviour
     private Slider healthSlider;
     [SerializeField]
     private Canvas healthCanvas;
+    [SerializeField]
+    private bool attackAnim = false;
 
     private Moving moving;
     private StatsContainer stats;
@@ -124,7 +126,14 @@ public class EnemyController : MonoBehaviour
 
         if(CanAttack())
         {
-            Attack();
+            if(attackAnim)
+            {
+                animator.SetBool("isAttacking", true);
+            }
+            else
+            {
+                Attack();
+            }
         }
     }
 
@@ -204,6 +213,7 @@ public class EnemyController : MonoBehaviour
             pathfinding.Activate();
             triggered = true;
             healthCanvas.enabled = true;
+            animator.SetBool("isActive", true);
         }
     }
 
@@ -291,5 +301,18 @@ public class EnemyController : MonoBehaviour
         angle -= 180.0f;
 
         return angle;
+    }
+
+    public void OnAttackEnd()
+    {
+        animator.SetBool("isAttacking", false);
+    }
+
+    public void AttackOnAnim()
+    {
+        if(CanAttack())
+        {
+            Attack();
+        }
     }
 }
