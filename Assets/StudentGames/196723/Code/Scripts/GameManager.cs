@@ -13,7 +13,12 @@ public class GameManager : MonoBehaviour
     public GameState currentGameState;
 
     [SerializeField]
+    private GameObject player;
+    [SerializeField]
     private GameplayUI gameplayUI;
+
+    [SerializeField]
+    private Transform lastCheckpoint;
 
     const string keyHighScore = "HighScoreLevel1";
 
@@ -93,6 +98,12 @@ public class GameManager : MonoBehaviour
         get { return gameStarted; }
     }
 
+    public Transform Checkpoint
+    {
+        get { return lastCheckpoint; }
+        set { lastCheckpoint = value; }
+    }
+
     public void StartGame()
     {
         gameStarted = true;
@@ -120,6 +131,33 @@ public class GameManager : MonoBehaviour
         keysFound++;
         gameplayUI.UpdateKeysImages();
     }
+
+    public void IncreaseLives()
+    {
+        lives = Mathf.Min(lives+1, 8);
+        gameplayUI.UpdateLivesImages();
+    }
+
+    public void DecreaseLives()
+    {
+        lives--;
+        if(lives == -1)
+        {
+            GameOver();
+        }
+        gameplayUI.UpdateLivesImages();
+    }
+
+    public void KillPlayer()
+    {
+        DecreaseLives();
+        player.transform.position = lastCheckpoint.position;
+        player.GetComponent<Rigidbody2D>().velocity = Vector3.zero;
+        player.GetComponent<StatsContainer>().HealAll();
+        StatsEffect.ClearPlayerEffects();
+    }
+
+
     public void SetVolume()
     {
         AudioListener.volume = gameplayUI.VolumeSliderValue();

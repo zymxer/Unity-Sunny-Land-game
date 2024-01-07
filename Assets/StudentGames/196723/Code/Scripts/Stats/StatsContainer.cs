@@ -134,6 +134,13 @@ public class StatsContainer : MonoBehaviour
         mana = 0;
     }
 
+    public void HealAll()
+    {
+        health = maxHealth;
+        mana = maxMana;
+    }
+
+
     public UnityEvent OnFirstHit
     {
         get { return onFirstHit; }

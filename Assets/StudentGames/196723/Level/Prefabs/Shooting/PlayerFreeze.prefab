@@ -4862,7 +4862,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7f6555ad55344b54d81fccebbc04505c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  slowRatio: 2
+  slowRatio: 4
   color: {r: 0.2946778, g: 0.42456013, b: 0.8113208, a: 1}
   duration: 5
   affectsPlayer: 0

@@ -175,7 +175,7 @@ public class PlayerPhysics : MonoBehaviour
         if(collision.CompareTag("Bonus"))
         {
             Bonus picked = collision.gameObject.GetComponent<Bonus>();
-            //ScoreController.GetController().IncreaseScore(picked.GetPoints());
+            GameManager.instance.IncreaseScore(picked.GetPoints());
             picked.StartPickupAnimation();
         }
         if(collision.CompareTag("Platform"))
@@ -201,39 +201,37 @@ public class PlayerPhysics : MonoBehaviour
         //    }
         //}
 
-        //if (collision.CompareTag("Enemy"))
-        //{
-        //    GameObject enemy = collision.gameObject;
-        //    if(transform.position.y > enemy.transform.position.y)
-        //    {
-        //        //ScoreController.GetController().IncreaseScore(enemy.GetComponent<EnemyController>().Points());
-        //        //GameManager.instance.UpdateEnemies();
-        //        collision.enabled = false;
-        //    }
-        //    else
-        //    {
-        //        transform.position = startPosition;
-        //        _rigidbody.velocity = Vector3.zero;
 
-        //    }
-        //}
         if (collision.CompareTag("Key"))
         {
             //audioSource.PlayOneShot(keySound, AudioListener.volume);
-            //keysFound++;
+
             collision.gameObject.SetActive(false);
-            //GameManager.instance.AddKeys();
+            GameManager.instance.IncreaseKeysAmount();
+
         }
+
         if (collision.CompareTag("Heart"))
         {
-            //lives++;
-            //GameManager.instance.EnableLives(lives);
+            GameManager.instance.IncreaseLives();
             collision.gameObject.SetActive(false);
         }
+
         if (collision.CompareTag("FallCollider"))
         {
-            Death();
+            GameManager.instance.KillPlayer();
         }
+
+        if(collision.CompareTag("Press") && isGrounded)
+        {
+            GameManager.instance.KillPlayer();
+        }
+
+        if(collision.CompareTag("Checkpoint"))
+        {
+            GameManager.instance.Checkpoint = collision.transform;
+        }
+
     }
     private void OnTriggerExit2D(Collider2D collision)
     {
@@ -241,21 +239,5 @@ public class PlayerPhysics : MonoBehaviour
         {
             transform.SetParent(null);
         }
-    }
-
-    private void Death()
-    {
-        //lives--;
-        transform.position = startPosition;
-        //GameManager.instance.EnableLives(lives);
-        _rigidbody.velocity = Vector3.zero;
-        //if (lives == 0)
-        //{
-        //    Debug.Log("Game over!");
-        //}
-        //else
-        //{
-            
-        //}
     }
 }

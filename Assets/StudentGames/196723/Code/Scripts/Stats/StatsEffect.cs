@@ -12,6 +12,8 @@ public class StatsEffect : MonoBehaviour
 
     private Timer timer;
 
+    private static List<StatsEffect> playerEffects = new List<StatsEffect>();
+
     public static StatsEffect AddEffect(GameObject target, StatType type, float speed, float duration)
     {
         if (target.GetComponent<StatsContainer>() != null)
@@ -22,6 +24,10 @@ public class StatsEffect : MonoBehaviour
             effectObject.AddComponent<StatsEffect>();
             effectObject.AddComponent<Timer>();
             effectObject.GetComponent<StatsEffect>().StartEffect(target, type, speed, duration);
+            if(target.CompareTag("Player"))
+            {
+                playerEffects.Add(effectObject.GetComponent<StatsEffect>());
+            }
             return effectObject.GetComponent<StatsEffect>();
         }
         return null;
@@ -66,4 +72,17 @@ public class StatsEffect : MonoBehaviour
         timer.Remove();
         Destroy(gameObject);
     }
+
+    public static void ClearPlayerEffects()
+    {
+        for(int i = playerEffects.Count - 1; i >= 0; i--)
+        {
+            if (playerEffects[i] != null)
+            {
+                playerEffects[i].StopEffect();
+            }
+            playerEffects.RemoveAt(i);
+        }
+    }
+
 }
