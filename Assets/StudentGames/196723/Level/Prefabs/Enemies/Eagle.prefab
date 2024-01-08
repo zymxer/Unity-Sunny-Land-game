@@ -102,7 +102,7 @@ Rigidbody2D:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 2288018123533925196}
-  m_BodyType: 2
+  m_BodyType: 0
   m_Simulated: 1
   m_UseFullKinematicContacts: 0
   m_UseAutoMass: 0
@@ -208,11 +208,13 @@ MonoBehaviour:
   attackCooldown: 1
   attackType: 0
   projectilePrefab: {fileID: 0}
+  shotPoint: {fileID: 0}
   isMovingRight: 1
   moveRange: 4
   points: 6
   healthSlider: {fileID: 3153618296016123808}
   healthCanvas: {fileID: 1519535711698582408}
+  attackAnim: 0
 --- !u!114 &1821736395304985348
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -257,6 +259,11 @@ MonoBehaviour:
   canFly: 1
   pathUpdateInterval: 0.5
   nextPointDistance: 1
+  groundRayLength: 2
+  groundChecker: {fileID: 0}
+  groundLayer:
+    serializedVersion: 2
+    m_Bits: 0
 --- !u!114 &7293695904085582759
 MonoBehaviour:
   m_ObjectHideFlags: 0

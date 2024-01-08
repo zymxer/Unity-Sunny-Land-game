@@ -37,7 +37,6 @@ public class MovingPlatform : MonoBehaviour
     private Vector3 startPosition;
     private Transform _transform;
     private int direction;
-    private float localTimeScale = 1.0f;
 
     private int pointIndex = 0;
     private float nextX = 0.0f;
@@ -46,7 +45,7 @@ public class MovingPlatform : MonoBehaviour
     private Vector2 prevPosition;
     private float deltaX = 0.0f;
     private float deltaY = 0.0f;
-    
+   
     // Start is called before the first frame update
     void Start()
     {
@@ -73,13 +72,22 @@ public class MovingPlatform : MonoBehaviour
         switch (moveMode)
         {
             case MoveMode.Horizontal:
-                transform.Translate(moving.Speed * Time.deltaTime * direction * localTimeScale, 0.0f, 0.0f, Space.World);
+                transform.Translate(moving.Speed * Time.deltaTime * direction, 0.0f, 0.0f, Space.World);
                 break;
             case MoveMode.Vertical:
-                transform.Translate(0.0f, moving.Speed * Time.deltaTime * direction * localTimeScale, 0.0f, Space.World);
+                transform.Translate(0.0f, moving.Speed * Time.deltaTime * direction, 0.0f, Space.World);
                 break;
             case MoveMode.Trajectory:
-                transform.position = Vector2.MoveTowards(transform.position, points[pointIndex], moving.Speed * Time.deltaTime * localTimeScale);
+
+                float distanceToPoint = DistanceToPoint();
+                if (distanceToPoint >= 1.5f)
+                {
+                    transform.position = Vector2.MoveTowards(transform.position, points[pointIndex], moving.Speed * Time.deltaTime);
+                }
+                else
+                {
+                    transform.position = Vector2.MoveTowards(transform.position, points[pointIndex], moving.Speed * Time.deltaTime * distanceToPoint / 1.5f);
+                }
                 if(CheckPointIndex())
                 {
                     UpdatePointIndex();
@@ -94,6 +102,13 @@ public class MovingPlatform : MonoBehaviour
     private bool CheckPointIndex()
     {
         return Mathf.Abs(transform.position.x - points[pointIndex].x) < 0.01f && Mathf.Abs(transform.position.y - points[pointIndex].y) < 0.01f;
+    }
+
+    private float DistanceToPoint()
+    {
+        float distX = transform.position.x - points[pointIndex].x;
+        float distY = transform.position.y - points[pointIndex].y;
+        return Mathf.Sqrt(distX * distX + distY * distY);
     }
 
     private void CheckDirection()
@@ -161,6 +176,8 @@ public class MovingPlatform : MonoBehaviour
         }
         pointIndex += direction;
     }
+
+
 
     private void UpdateDeltas()
     {

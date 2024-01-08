@@ -22,6 +22,8 @@ public class Freeze : MonoBehaviour
     private GameObject target;
     private Timer timer;
 
+    private int firstHit = 0;
+
     private static ArrayList affectedObjects = new ArrayList();
     // Start is called before the first frame update
     void Start()
@@ -44,9 +46,13 @@ public class Freeze : MonoBehaviour
 
             if(affectsPlayer)
             {
-                if(!collision.CompareTag("Enemy"))
+                if(!collision.CompareTag("Enemy") || (collision.CompareTag("Enemy") && firstHit != 0))
                 {
                     AddFreezeEffect(collision);
+                }
+                else
+                {
+                    firstHit++;
                 }
             }
             else
@@ -73,10 +79,6 @@ public class Freeze : MonoBehaviour
             snowEffect.transform.parent = target.transform;
             shapeModule.scale = Vector3.Scale(target.GetComponent<Renderer>().bounds.size, target.transform.localScale);
             createdSystem.Play();
-            if (target.GetComponent<SpriteRenderer>() != null)
-            {
-                target.GetComponent<SpriteRenderer>().color = color;
-            }
 
             gameObject.SetActive(false);
             affectedObjects.Add(target);
@@ -97,12 +99,18 @@ public class Freeze : MonoBehaviour
 
     private void OnTimerEnd()
     {
-        affectedObjects.Remove(target);
-        SpeedUpTimers();
-        SpeedUpObject();
-        timer.Remove();
-        createdSystem.Stop();
-        Destroy(gameObject);
+        if(gameObject != null)
+        {
+            affectedObjects.Remove(target);
+            SpeedUpTimers();
+            SpeedUpObject();
+            timer.Remove();
+            if(createdSystem != null)
+            {
+                createdSystem.Stop();
+            }
+            Destroy(gameObject);
+        }
     }
 
     private void SlowDownTimers()
@@ -138,6 +146,15 @@ public class Freeze : MonoBehaviour
             {
                 moving.SlowDown(slowRatio);
             }
+            if (target.GetComponent<SpriteRenderer>() != null)
+            {
+                target.GetComponent<SpriteRenderer>().color = color;
+            }
+
+            if (target.GetComponent<Animator>() != null)
+            {
+                target.GetComponent<Animator>().speed /= slowRatio;
+            }
         }
     }
 
@@ -153,6 +170,10 @@ public class Freeze : MonoBehaviour
             if (moving != null)
             {
                 moving.SpeedUp(slowRatio);
+            }
+            if (target.GetComponent<Animator>() != null)
+            {
+                target.GetComponent<Animator>().speed *= slowRatio;
             }
         }
     }

@@ -67,23 +67,6 @@ public class PlayerPhysics : MonoBehaviour
         if (GameManager.instance.currentGameState == GameState.GS_GAME)
         {
             isGrounded = CheckGrounded();
-
-
-            //if (Input.GetKeyDown(KeyCode.RightArrow) || Input.GetKeyDown(KeyCode.D))
-            //{
-            //    if (!isFacingRight)
-            //    {
-            //        Rotate();
-            //    }
-            //}
-            //if (Input.GetKeyDown(KeyCode.LeftArrow) || Input.GetKeyDown(KeyCode.A))
-            //{
-            //    if (isFacingRight)
-            //    {
-            //        Rotate();
-            //    }
-            //}
-
             if (Input.GetKey(KeyCode.RightArrow) || Input.GetKey(KeyCode.D))
             {
                 isWalking = true;

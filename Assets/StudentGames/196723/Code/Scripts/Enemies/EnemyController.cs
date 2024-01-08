@@ -263,6 +263,8 @@ public class EnemyController : MonoBehaviour
         healthCanvas.enabled = false;
         moving.Speed = 0.0f;
         StartCoroutine(KillOnAnimationEnd());
+        GameManager.instance.IncreaseEnemiesKilled();
+        GameManager.instance.IncreaseScore(points);
     }
 
     IEnumerator KillOnAnimationEnd()

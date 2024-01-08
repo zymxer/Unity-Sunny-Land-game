@@ -14625,7 +14625,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9f8882d53bf955e4d80c3674d32d9623, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  speed: 10
+  speed: 12
 --- !u!114 &3655583927838506866
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -14638,8 +14638,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 4412e2de61e11e64ea645e31ad187a52, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  duration: 0.6
-  burstDuration: 0.6
+  duration: 0.7
+  burstDuration: 0.7
   radiusIncSpeed: 1.1
   damage: 25
   affectsPlayer: 0

@@ -91,7 +91,7 @@ public class SpellsController : MonoBehaviour
             }
         }
 
-        else if(Input.GetMouseButtonUp(0))
+        else if(Input.GetMouseButtonUp(0) || playerStats.Mana == 0.0f)
         {
             StopContinuousSpell();
         }
