@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using static UnityEngine.GraphicsBuffer;
 
 public class Fire : MonoBehaviour
 {
@@ -12,6 +13,8 @@ public class Fire : MonoBehaviour
     private float damage;
     [SerializeField]
     private float radius = 3.5f;
+    [SerializeField]
+    private GameObject fireParticles;
 
     private Vector3 currentPosition;
 
@@ -20,6 +23,7 @@ public class Fire : MonoBehaviour
     private ParticleSystem.MainModule mainModule;
     private List<GameObject> affectedObjects = new List<GameObject>();
     private List<Timer> affectedObjectsTimers = new List<Timer>();
+    private ParticleSystem createdSystem;
 
 
     private void Start()
@@ -57,6 +61,7 @@ public class Fire : MonoBehaviour
                 effectTimer.OnEnd().AddListener(OnAffectedTimerEnd);
                 effectTimer.Activate();
                 affectedObjectsTimers.Add(effectTimer);
+                AddFireEffect(other);
             }
         }
     }
@@ -74,5 +79,18 @@ public class Fire : MonoBehaviour
                 Destroy(timer);
             }
         }
+    }
+
+    private void AddFireEffect(GameObject target)
+    {
+        GameObject fireEffect = Instantiate(fireParticles, target.transform.position, Quaternion.identity);
+        createdSystem = fireEffect.GetComponent<ParticleSystem>();
+        createdSystem.Stop();
+        ParticleSystem.ShapeModule shapeModule = createdSystem.shape;
+        ParticleSystem.MainModule mainModule = createdSystem.main;
+        mainModule.duration = effectDuration + mainModule.startLifetime.constant;
+        fireEffect.transform.parent = target.transform;
+        shapeModule.scale = Vector3.Scale(target.GetComponent<Renderer>().bounds.size, target.transform.localScale);
+        createdSystem.Play();
     }
 }

@@ -14625,7 +14625,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9f8882d53bf955e4d80c3674d32d9623, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  speed: 12
+  speed: 13
 --- !u!114 &3655583927838506866
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -14638,9 +14638,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 4412e2de61e11e64ea645e31ad187a52, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  duration: 0.7
+  duration: 0.8
   burstDuration: 0.7
-  radiusIncSpeed: 1.1
+  radiusIncSpeed: 1.2
   damage: 25
   affectsPlayer: 0
 --- !u!114 &2873971524849079614
@@ -14667,7 +14667,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0761b3b3b5c500441bb4f984911cb44c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  cost: 1
+  cost: 10
   continuous: 0
-  cooldown: 1
+  cooldown: 0.7
   type: 0

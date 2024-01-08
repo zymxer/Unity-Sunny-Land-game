@@ -18,7 +18,7 @@ public class Freeze : MonoBehaviour
     [SerializeField]
     private GameObject snowParticles;
 
-    ParticleSystem createdSystem;
+    private ParticleSystem createdSystem;
     private GameObject target;
     private Timer timer;
 
