@@ -23,6 +23,7 @@ public class Freeze : MonoBehaviour
     private Timer timer;
 
     private int firstHit = 0;
+    private Color ogColor;
 
     private static ArrayList affectedObjects = new ArrayList();
     // Start is called before the first frame update
@@ -151,6 +152,7 @@ public class Freeze : MonoBehaviour
             }
             if (target.GetComponent<SpriteRenderer>() != null)
             {
+                ogColor = target.GetComponent<SpriteRenderer>().color;
                 target.GetComponent<SpriteRenderer>().color = color;
             }
 
@@ -167,7 +169,7 @@ public class Freeze : MonoBehaviour
         {
             if(target.GetComponent<SpriteRenderer>() != null)
             {
-                target.GetComponent<SpriteRenderer>().color = Color.white;
+                target.GetComponent<SpriteRenderer>().color = ogColor;
             }
             Moving moving = target.GetComponent<Moving>();
             if (moving != null)
