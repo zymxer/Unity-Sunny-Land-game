@@ -140,13 +140,27 @@ public class MovingPlatform : MonoBehaviour
                 }
                 break;
             case MoveMode.Vertical:
-                if (direction == 1 && transform.position.y >= startPosition.y + yMargin)
+                if (startDirection)
                 {
-                    direction = -1;
+                    if (direction == 1 && transform.position.y >= startPosition.y + yMargin)
+                    {
+                        direction = -1;
+                    }
+                    else if (direction == -1 && transform.position.y <= startPosition.y)
+                    {
+                        direction = 1;
+                    }
                 }
-                else if (direction == -1 && transform.position.y <= startPosition.y)
+                else
                 {
-                    direction = 1;
+                    if (direction == 1 && transform.position.y >= startPosition.y)
+                    {
+                        direction = -1;
+                    }
+                    else if (direction == -1 && transform.position.y <= startPosition.y - yMargin)
+                    {
+                        direction = 1;
+                    }
                 }
                 break;
             default: break;

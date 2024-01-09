@@ -4863,7 +4863,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   slowRatio: 4
-  color: {r: 0.2946778, g: 0.42456013, b: 0.8113208, a: 1}
+  color: {r: 0.5438323, g: 0.6460818, b: 0.9528302, a: 1}
   duration: 5
   affectsPlayer: 0
   snowParticles: {fileID: 8923408265849356060, guid: 3fc125dc9a6ead24ca457a49527c1dfc, type: 3}

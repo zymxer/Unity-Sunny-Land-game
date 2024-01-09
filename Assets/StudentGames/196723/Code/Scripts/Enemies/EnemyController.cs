@@ -257,14 +257,17 @@ public class EnemyController : MonoBehaviour
 
     private void KillEnemy()
     {
-        dead = true;
-        GetComponent<Collider2D>().enabled = false;
-        animator.SetBool("isDead", true);
-        healthCanvas.enabled = false;
-        moving.Speed = 0.0f;
-        StartCoroutine(KillOnAnimationEnd());
-        GameManager.instance.IncreaseEnemiesKilled();
-        GameManager.instance.IncreaseScore(points);
+        if(!dead)
+        {
+            dead = true;
+            GetComponent<Collider2D>().enabled = false;
+            animator.SetBool("isDead", true);
+            healthCanvas.enabled = false;
+            moving.Speed = 0.0f;
+            StartCoroutine(KillOnAnimationEnd());
+            GameManager.instance.IncreaseEnemiesKilled();
+            GameManager.instance.IncreaseScore(points);
+        }
     }
 
     IEnumerator KillOnAnimationEnd()

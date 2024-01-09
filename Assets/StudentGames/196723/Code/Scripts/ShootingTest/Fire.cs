@@ -90,7 +90,9 @@ public class Fire : MonoBehaviour
         ParticleSystem.MainModule mainModule = createdSystem.main;
         mainModule.duration = effectDuration + mainModule.startLifetime.constant;
         fireEffect.transform.parent = target.transform;
-        shapeModule.scale = Vector3.Scale(target.GetComponent<Renderer>().bounds.size, target.transform.localScale);
+        //shapeModule.scale = Vector3.Scale(target.GetComponent<Renderer>().bounds.size, target.transform.localScale);
+        Vector3 newScale = new Vector3(target.GetComponent<Collider2D>().bounds.size.x, 1.0f, target.GetComponent<Collider2D>().bounds.size.y);
+        shapeModule.scale = newScale;
         createdSystem.Play();
     }
 }
