@@ -40,10 +40,11 @@ public class Freeze : MonoBehaviour
     {
         if(!collision.isTrigger)
         {
-            if(gameObject.CompareTag("World"))
+            if(collision.CompareTag("World"))
             {
                 Destroy(gameObject);
             }
+
 
             if(affectsPlayer)
             {
@@ -103,18 +104,15 @@ public class Freeze : MonoBehaviour
 
     private void OnTimerEnd()
     {
-        if(gameObject != null)
+        SpeedUpObject();
+        SpeedUpTimers();
+        if (createdSystem != null)
         {
-            affectedObjects.Remove(target);
-            SpeedUpTimers();
-            SpeedUpObject();
-            timer.Remove();
-            if(createdSystem != null)
-            {
-                createdSystem.Stop();
-            }
-            Destroy(gameObject);
+            createdSystem.Stop();
         }
+        affectedObjects.Remove(target);
+        timer.Remove();
+        Destroy(gameObject);
     }
 
     private void SlowDownTimers()

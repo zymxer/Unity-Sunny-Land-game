@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using Unity.VisualScripting;
 using UnityEditor.Experimental.GraphView;
 using UnityEngine;
 
@@ -111,6 +112,7 @@ public class SpellsController : MonoBehaviour
     {
         if (continuousSpell != null)
         {
+            continuousSpell.gameObject.GetComponent<AudioSource>().Stop();
             continuousSpell.StopSpell();
             continuousSpell = null;
         }
@@ -136,6 +138,18 @@ public class SpellsController : MonoBehaviour
     public void StartCooldown(int i)
     {
         cooldowns[i].Activate();
+    }
+
+    public void ResetCooldowns()
+    {
+        for (int i = 0; i < cooldowns.Length; i++)
+        {
+            if (cooldowns[i].IsActive())
+            {
+                cooldowns[i].SetValue(0.0f);
+            }
+            //cooldowns[i].ResetTimer();
+        }
     }
 
     public GameObject GetPlayer()

@@ -51,7 +51,7 @@ public class SliderTimer : MonoBehaviour
             slider.value = timer.GetValue();
         }
     }
-    
+
     public Slider GetSlider()
     {
         return slider;

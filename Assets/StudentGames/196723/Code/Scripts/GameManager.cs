@@ -157,6 +157,8 @@ public class GameManager : MonoBehaviour
         player.transform.position = lastCheckpoint.position;
         player.GetComponent<Rigidbody2D>().velocity = Vector3.zero;
         player.GetComponent<StatsContainer>().HealAll();
+        SpellsController.instance.StopContinuousSpell();
+        SpellsController.instance.ResetCooldowns();
         StatsEffect.ClearPlayerEffects();
     }
 
@@ -195,11 +197,6 @@ public class GameManager : MonoBehaviour
     {
         currentGameState = state;
         gameplayUI.ChangeState(currentGameState);
-
-        //inGameCanvas.SetActive(currentGameState == GameState.GS_GAME);
-        //pauseMenuCanvas.SetActive(currentGameState == GameState.GS_PAUSEMENU);
-        //levelCompletedCanvas.SetActive(currentGameState == GameState.GS_LEVELCOMPLETED);
-        //optionsCanvas.SetActive(currentGameState == GameState.GS_OPTIONS);
 
         if (currentGameState == GameState.GS_LEVELCOMPLETED)
         {
@@ -260,7 +257,7 @@ public class GameManager : MonoBehaviour
         {
             InGame();
         }
-        else
+        else if(currentGameState == GameState.GS_GAME)
         {
             PauseMenu();
         }

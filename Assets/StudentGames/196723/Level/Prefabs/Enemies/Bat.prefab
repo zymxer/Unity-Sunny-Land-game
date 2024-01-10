@@ -211,9 +211,10 @@ MonoBehaviour:
   shotPoint: {fileID: 0}
   isMovingRight: 1
   moveRange: 0
-  points: 6
+  points: 5
   healthSlider: {fileID: 6820230155837285433}
   healthCanvas: {fileID: 1515504731785535885}
+  attackAnim: 0
 --- !u!114 &1081947345375162878
 MonoBehaviour:
   m_ObjectHideFlags: 0

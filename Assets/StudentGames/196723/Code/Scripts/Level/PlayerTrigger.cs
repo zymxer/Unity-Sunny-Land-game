@@ -44,7 +44,10 @@ public class PlayerTrigger : MonoBehaviour
     {
         for(int i = 0; i < objectsToActivate.Length; i++)
         {
-            objectsToActivate[i].SetActive(true);
+            if(objectsToActivate[i] != null)
+            {
+                objectsToActivate[i].SetActive(true);
+            }
         }
     }
 
@@ -52,7 +55,10 @@ public class PlayerTrigger : MonoBehaviour
     {
         for (int i = 0; i < objectsToDisable.Length; i++)
         {
-            objectsToActivate[i].SetActive(false);
+            if(objectsToDisable[i] != null)
+            {
+                objectsToDisable[i].SetActive(false);
+            }
         }
     }
 
@@ -60,7 +66,10 @@ public class PlayerTrigger : MonoBehaviour
     {
         for (int i = 0; i < componentsToEnable.Length; i++)
         {
-            componentsToEnable[i].enabled = true;
+            if (componentsToEnable[i] != null)
+            {
+                componentsToEnable[i].enabled = true;
+            }
         }
     }
 
@@ -68,7 +77,10 @@ public class PlayerTrigger : MonoBehaviour
     {
         for (int i = 0; i < componentsToDisable.Length; i++)
         {
-            componentsToDisable[i].enabled = false;
+            if (componentsToDisable[i] != null)
+            {
+                componentsToDisable[i].enabled = false;
+            }
         }
     }
 

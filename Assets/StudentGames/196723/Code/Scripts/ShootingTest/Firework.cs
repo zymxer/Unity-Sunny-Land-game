@@ -16,6 +16,8 @@ public class Firework : MonoBehaviour
     private float damage;
     [SerializeField]
     private bool affectsPlayer;
+    [SerializeField]
+    private AudioClip burstAudio;
 
     private ParticleSystem projectile;
     private ParticleSystem burst;
@@ -64,6 +66,10 @@ public class Firework : MonoBehaviour
     private void StopFirework()
     {
         GetComponent<Projectile>().StopProjectile();
+        GetComponent<AudioSource>().Stop();
+        GetComponent<AudioSource>().clip = burstAudio;
+        GetComponent<AudioSource>().Play();
+
         Destroy(projectile);
         burst.Play();
         burstTimer.Activate();

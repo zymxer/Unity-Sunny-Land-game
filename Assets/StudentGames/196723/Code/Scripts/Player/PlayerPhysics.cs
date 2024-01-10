@@ -42,6 +42,8 @@ public class PlayerPhysics : MonoBehaviour
 
     private bool isGrounded = false;
 
+    private bool onPressTop = false;
+
     void Start()
     {
         moving = GetComponent<Moving>();
@@ -209,12 +211,34 @@ public class PlayerPhysics : MonoBehaviour
             GameManager.instance.Checkpoint = collision.transform;
         }
 
+        if(collision.CompareTag("PressTop"))
+        {
+            onPressTop = true;
+        }
     }
+
+    private void OnCollisionEnter2D(Collision2D collision)
+    {
+        if (collision.gameObject.CompareTag("World"))
+        {
+            if (onPressTop)
+            {
+                onPressTop = false;
+                GameManager.instance.KillPlayer();
+            }
+        }
+    }
+
     private void OnTriggerExit2D(Collider2D collision)
     {
         if (collision.CompareTag("Platform") && collision.gameObject.activeInHierarchy)
         {
             transform.SetParent(null);
+        }
+
+        if (collision.CompareTag("PressTop"))
+        {
+            onPressTop = false;
         }
     }
 }

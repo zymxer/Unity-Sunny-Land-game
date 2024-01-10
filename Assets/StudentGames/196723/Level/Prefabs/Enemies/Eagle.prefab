@@ -205,13 +205,13 @@ MonoBehaviour:
   damage: 6
   damageType: 1
   damageDuration: 5
-  attackCooldown: 1
+  attackCooldown: 1.2
   attackType: 0
   projectilePrefab: {fileID: 0}
   shotPoint: {fileID: 0}
   isMovingRight: 1
   moveRange: 4
-  points: 6
+  points: 50
   healthSlider: {fileID: 3153618296016123808}
   healthCanvas: {fileID: 1519535711698582408}
   attackAnim: 0
@@ -276,7 +276,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b5573a2ec7d10d64485bd2ce358d7344, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  health: 40
+  health: 120
   mana: 0
   regeterates: 0
   healthRestoreCooldown: 0

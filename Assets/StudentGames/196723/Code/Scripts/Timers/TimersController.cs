@@ -71,7 +71,10 @@ public class TimersController : MonoBehaviour
                     timer.ResetTimer();   
                 }
             }
-            timer.OnValueChanged().Invoke();
+            else
+            {
+                timer.OnValueChanged().Invoke();
+            }
         }
     }
 
