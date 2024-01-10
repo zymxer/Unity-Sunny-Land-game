@@ -2,47 +2,51 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class Projectile : MonoBehaviour
+namespace _196723
 {
-    private Moving moving;
-
-    private float targetAngle = 0.0f;
-    private float radians = 0.0f;
-    private float speedX = 0.0f;
-    private float speedY = 0.0f;
-
-    private Rigidbody2D _rigidbody;
-
-    private void Awake()
+    public class Projectile : MonoBehaviour
     {
-        moving = GetComponent<Moving>();
-        _rigidbody = GetComponent<Rigidbody2D>();
-    }
+        private Moving moving;
 
-    private void Update()
-    {
-        transform.Translate(speedX * Time.deltaTime, speedY * Time.deltaTime, 0.0f, Space.World);
-    }
+        private float targetAngle = 0.0f;
+        private float radians = 0.0f;
+        private float speedX = 0.0f;
+        private float speedY = 0.0f;
 
-    public void SetProjectile(float angle)
-    {
-        targetAngle = angle;
-        radians = targetAngle * Mathf.Deg2Rad;
-        speedX = moving.Speed * Mathf.Cos(radians);
-        speedY = moving.Speed * Mathf.Sin(radians);
-    }
+        private Rigidbody2D _rigidbody;
 
-    public void StopProjectile()
-    {
-        speedX = 0.0f;
-        speedY = 0.0f;
-    }
-
-    private void OnTriggerEnter2D(Collider2D collision)
-    {
-        if (collision.gameObject.CompareTag("DestroyTrigger"))
+        private void Awake()
         {
-            Destroy(gameObject);
+            moving = GetComponent<Moving>();
+            _rigidbody = GetComponent<Rigidbody2D>();
+        }
+
+        private void Update()
+        {
+            transform.Translate(speedX * Time.deltaTime, speedY * Time.deltaTime, 0.0f, Space.World);
+        }
+
+        public void SetProjectile(float angle)
+        {
+            targetAngle = angle;
+            radians = targetAngle * Mathf.Deg2Rad;
+            speedX = moving.Speed * Mathf.Cos(radians);
+            speedY = moving.Speed * Mathf.Sin(radians);
+        }
+
+        public void StopProjectile()
+        {
+            speedX = 0.0f;
+            speedY = 0.0f;
+        }
+
+        private void OnTriggerEnter2D(Collider2D collision)
+        {
+            if (collision.gameObject.CompareTag("DestroyTrigger"))
+            {
+                Destroy(gameObject);
+            }
         }
     }
 }
+

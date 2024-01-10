@@ -4,52 +4,55 @@ using UnityEngine;
 using UnityEngine.UI;
 using Pathfinding;
 
-
-public class StatsUITest : MonoBehaviour
+namespace _196723
 {
-    public GameObject target;
-    private StatsContainer statsContainer;
-
-    public Slider manaSlider;
-    public Slider healthSlider;
-
-
-    public void DecreaseMana()
+    public class StatsUITest : MonoBehaviour
     {
-        statsContainer.ChangeMana(-30);
-    }
+        public GameObject target;
+        private StatsContainer statsContainer;
 
-    public void DecreaseHealth()
-    {
-        statsContainer.ChangeHP(-20);
-    }
+        public Slider manaSlider;
+        public Slider healthSlider;
 
-    public void DHealthEffect()
-    {
-        StatsEffect.AddEffect(target, StatType.HEALTH, -5, 10000);
-    }
 
-    private void Update()
-    {
-        //manaSlider.value = statsContainer.Mana;
-        //healthSlider.value = statsContainer.Health;
-        if(Input.GetKeyDown(KeyCode.P))
+        public void DecreaseMana()
         {
-            Time.timeScale = 0.0f;
-        }
-        else if (Input.GetKeyDown(KeyCode.O))
-        {
-            Time.timeScale = 1.0f;
+            statsContainer.ChangeMana(-30);
         }
 
-    }
+        public void DecreaseHealth()
+        {
+            statsContainer.ChangeHP(-20);
+        }
 
-    private void Start()
-    {
-        //statsContainer = target.GetComponent<StatsContainer>();
-        //manaSlider.maxValue = statsContainer.GetMaxMana();
-        //healthSlider.maxValue = statsContainer.GetMaxHealth();
-        //manaSlider.value = statsContainer.Mana;
-        //healthSlider.value = statsContainer.Health;
+        public void DHealthEffect()
+        {
+            StatsEffect.AddEffect(target, StatType.HEALTH, -5, 10000);
+        }
+
+        private void Update()
+        {
+            //manaSlider.value = statsContainer.Mana;
+            //healthSlider.value = statsContainer.Health;
+            if (Input.GetKeyDown(KeyCode.P))
+            {
+                Time.timeScale = 0.0f;
+            }
+            else if (Input.GetKeyDown(KeyCode.O))
+            {
+                Time.timeScale = 1.0f;
+            }
+
+        }
+
+        private void Start()
+        {
+            //statsContainer = target.GetComponent<StatsContainer>();
+            //manaSlider.maxValue = statsContainer.GetMaxMana();
+            //healthSlider.maxValue = statsContainer.GetMaxHealth();
+            //manaSlider.value = statsContainer.Mana;
+            //healthSlider.value = statsContainer.Health;
+        }
     }
 }
+

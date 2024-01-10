@@ -3,84 +3,87 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Video;
 
-public class TimersController : MonoBehaviour
+namespace _196723
 {
-    [SerializeField]
-    private int amount;
-    public readonly List<Timer> timersList = new List<Timer>();
-    private static TimersController instance = null;
-
-    private Timer currentTimer;
-
-
-    private void Awake()
+    public class TimersController : MonoBehaviour
     {
-        if(instance == null)
+        [SerializeField]
+        private int amount;
+        public readonly List<Timer> timersList = new List<Timer>();
+        private static TimersController instance = null;
+
+        private Timer currentTimer;
+
+
+        private void Awake()
         {
-            instance = this;
-        }
-    }
-
-    public void AddTimer(Timer timer)
-    {
-        timersList.Add(timer);
-    }
-
-    public void RemoveTimer(Timer timer) 
-    {
-        timer.OnStart().RemoveAllListeners();
-        timer.OnValueChanged().RemoveAllListeners();
-        timer.OnEnd().RemoveAllListeners();
-        timersList.Remove(timer);
-    }
-    
-    void Update()
-    {
-        amount = timersList.Count;
-        UpdateTimers();
-    }
-
-    private void UpdateTimers()
-    {
-        for (int i = timersList.Count - 1; i >= 0; i--)
-        {
-            currentTimer = timersList[i];
-            UpdateTimer(currentTimer);
-        }
-    }
-
-    private void UpdateTimer(Timer timer)
-    {
-        if(timer.ToDelete())
-        {
-            RemoveTimer(timer);
-        }
-        else if (timer.IsActive())
-        {
-            timer.SetValue(timer.GetValue() - Time.deltaTime);
-            timer.UpdateDelta();
-            if (timer.GetValue() <= 0f)
+            if (instance == null)
             {
-                timer.OnEnd().Invoke();
-                if (timer.IsContinuous())
+                instance = this;
+            }
+        }
+
+        public void AddTimer(Timer timer)
+        {
+            timersList.Add(timer);
+        }
+
+        public void RemoveTimer(Timer timer)
+        {
+            timer.OnStart().RemoveAllListeners();
+            timer.OnValueChanged().RemoveAllListeners();
+            timer.OnEnd().RemoveAllListeners();
+            timersList.Remove(timer);
+        }
+
+        void Update()
+        {
+            amount = timersList.Count;
+            UpdateTimers();
+        }
+
+        private void UpdateTimers()
+        {
+            for (int i = timersList.Count - 1; i >= 0; i--)
+            {
+                currentTimer = timersList[i];
+                UpdateTimer(currentTimer);
+            }
+        }
+
+        private void UpdateTimer(Timer timer)
+        {
+            if (timer.ToDelete())
+            {
+                RemoveTimer(timer);
+            }
+            else if (timer.IsActive())
+            {
+                timer.SetValue(timer.GetValue() - Time.deltaTime);
+                timer.UpdateDelta();
+                if (timer.GetValue() <= 0f)
                 {
-                    timer.Restart();
+                    timer.OnEnd().Invoke();
+                    if (timer.IsContinuous())
+                    {
+                        timer.Restart();
+                    }
+                    else
+                    {
+                        timer.ResetTimer();
+                    }
                 }
                 else
                 {
-                    timer.ResetTimer();   
+                    timer.OnValueChanged().Invoke();
                 }
             }
-            else
-            {
-                timer.OnValueChanged().Invoke();
-            }
         }
-    }
 
-    public static TimersController GetController()
-    {
-        return instance;
+        public static TimersController GetController()
+        {
+            return instance;
+        }
+
     }
-    
 }

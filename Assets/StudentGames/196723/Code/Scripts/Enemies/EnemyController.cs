@@ -1,327 +1,323 @@
 using System.Collections;
-using System.Collections.Generic;
-using Unity.VisualScripting;
-using UnityEditor.Animations;
-using UnityEditor.ShaderGraph.Internal;
 using UnityEngine;
-using UnityEngine.Rendering;
 using UnityEngine.UI;
-using static UnityEditor.ShaderGraph.Internal.KeywordDependentCollection;
-using static UnityEngine.RuleTile.TilingRuleOutput;
 
-public enum AttackType { Melee, Range};
-public enum DamageType { Descrete, Continuous};
-
-public class EnemyController : MonoBehaviour
+namespace _196723
 {
-    [SerializeField]
-    private float damage;
+    public enum AttackType { Melee, Range };
+    public enum DamageType { Descrete, Continuous };
 
-    [SerializeField]
-    private DamageType damageType;
-    [Header("For continuous damage")]
-    [SerializeField]
-    private float damageDuration;
-    [Space(5)]
-    [SerializeField]
-    private float attackCooldown;
-    [SerializeField]
-    private AttackType attackType;
-    [Header("For range attack")]
-    [SerializeField]
-    private GameObject projectilePrefab;
-    [SerializeField]
-    private GameObject shotPoint;
-
-    [Space(5)]
-    [SerializeField]
-    private bool isMovingRight = true;
-    [SerializeField]
-    private float moveRange = 0.0f;
-
-    [SerializeField]
-    private int points = 6;
-
-    [Space(5)]
-    [SerializeField]
-    private Slider healthSlider;
-    [SerializeField]
-    private Canvas healthCanvas;
-    [SerializeField]
-    private bool attackAnim = false;
-
-    private Moving moving;
-    private StatsContainer stats;
-    private Animator animator;
-    private EnemyPathfinding pathfinding;
-    private Timer cooldownTimer;
-
-    private GameObject player;
-    private StatsContainer playerStats;
-
-    private Vector3 scale;
-    private Vector3 healthSliderScale;
-
-    private int direction;
-    private float startPositionX;
-
-    private bool triggered = false;
-    private bool dead = false;
-
-    private void Awake()
+    public class EnemyController : MonoBehaviour
     {
+        [SerializeField]
+        private float damage;
 
-    }
+        [SerializeField]
+        private DamageType damageType;
+        [Header("For continuous damage")]
+        [SerializeField]
+        private float damageDuration;
+        [Space(5)]
+        [SerializeField]
+        private float attackCooldown;
+        [SerializeField]
+        private AttackType attackType;
+        [Header("For range attack")]
+        [SerializeField]
+        private GameObject projectilePrefab;
+        [SerializeField]
+        private GameObject shotPoint;
 
-    private void Start()
-    {
-        moving = GetComponent<Moving>();
-        stats = GetComponent<StatsContainer>();
-        animator = GetComponent<Animator>();
-        pathfinding = GetComponent<EnemyPathfinding>();
-        cooldownTimer = gameObject.AddComponent<Timer>();
+        [Space(5)]
+        [SerializeField]
+        private bool isMovingRight = true;
+        [SerializeField]
+        private float moveRange = 0.0f;
 
-        player = pathfinding.Player;
-        playerStats = player.GetComponent<StatsContainer>();
+        [SerializeField]
+        private int points = 6;
 
-        cooldownTimer.SetTimer(attackCooldown);
+        [Space(5)]
+        [SerializeField]
+        private Slider healthSlider;
+        [SerializeField]
+        private Canvas healthCanvas;
+        [SerializeField]
+        private bool attackAnim = false;
 
-        direction = isMovingRight ? 1 : -1;
+        private Moving moving;
+        private StatsContainer stats;
+        private Animator animator;
+        private EnemyPathfinding pathfinding;
+        private Timer cooldownTimer;
 
-        scale = transform.localScale;
-        healthSliderScale = healthSlider.transform.localScale;
+        private GameObject player;
+        private StatsContainer playerStats;
 
-        if(!isMovingRight)
+        private Vector3 scale;
+        private Vector3 healthSliderScale;
+
+        private int direction;
+        private float startPositionX;
+
+        private bool triggered = false;
+        private bool dead = false;
+
+        private void Awake()
         {
-            Rotate();
+
         }
 
-        stats.OnFirstHit.AddListener(TriggerEnemy);
-        stats.OnZeroHealth.AddListener(KillEnemy);
-
-        healthCanvas.enabled = false;
-        healthSlider.maxValue = stats.GetMaxHealth();
-        healthSlider.value = healthSlider.maxValue;
-
-        startPositionX = transform.position.x;
-    }
-
-    // Update is called once per frame
-    void Update()
-    {
-        if (!triggered) //basic movement
+        private void Start()
         {
-            if (moveRange != 0.0f)
+            moving = GetComponent<Moving>();
+            stats = GetComponent<StatsContainer>();
+            animator = GetComponent<Animator>();
+            pathfinding = GetComponent<EnemyPathfinding>();
+            cooldownTimer = gameObject.AddComponent<Timer>();
+
+            player = pathfinding.Player;
+            playerStats = player.GetComponent<StatsContainer>();
+
+            cooldownTimer.SetTimer(attackCooldown);
+
+            direction = isMovingRight ? 1 : -1;
+
+            scale = transform.localScale;
+            healthSliderScale = healthSlider.transform.localScale;
+
+            if (!isMovingRight)
             {
+                Rotate();
+            }
+
+            stats.OnFirstHit.AddListener(TriggerEnemy);
+            stats.OnZeroHealth.AddListener(KillEnemy);
+
+            healthCanvas.enabled = false;
+            healthSlider.maxValue = stats.GetMaxHealth();
+            healthSlider.value = healthSlider.maxValue;
+
+            startPositionX = transform.position.x;
+        }
+
+        // Update is called once per frame
+        void Update()
+        {
+            if (!triggered) //basic movement
+            {
+                if (moveRange != 0.0f)
+                {
+                    CheckDirection();
+                    transform.Translate(moving.Speed * Time.deltaTime * direction, 0.0f, 0.0f, Space.World);
+                }
+            }
+            else //pathfinding
+            {
+                healthSlider.value = stats.Health;
                 CheckDirection();
-                transform.Translate(moving.Speed * Time.deltaTime * direction, 0.0f, 0.0f, Space.World);
+                transform.Translate(moving.Speed * pathfinding.Direction.x * Time.deltaTime, moving.Speed * pathfinding.Direction.y * Time.deltaTime, 0f, Space.World);
+            }
+
+            if (CanAttack())
+            {
+                if (attackAnim)
+                {
+                    animator.SetBool("isAttacking", true);
+                }
+                else
+                {
+                    Attack();
+                }
             }
         }
-        else //pathfinding
+
+        public int Points()
         {
-            healthSlider.value = stats.Health;
-            CheckDirection();
-            transform.Translate(moving.Speed * pathfinding.Direction.x * Time.deltaTime, moving.Speed * pathfinding.Direction.y * Time.deltaTime, 0f, Space.World);
+            return points;
         }
 
-        if(CanAttack())
+        public void CheckDirection()
         {
-            if(attackAnim)
+            if (!triggered)
             {
-                animator.SetBool("isAttacking", true);
+                if (isMovingRight)
+                {
+                    if (direction == 1 && transform.position.x >= startPositionX + moveRange)
+                    {
+                        direction = -1;
+                        Rotate();
+                    }
+                    else if (direction == -1 && transform.position.x <= startPositionX)
+                    {
+                        direction = 1;
+                        Rotate();
+                    }
+                }
+                else
+                {
+                    if (direction == 1 && transform.position.x >= startPositionX)
+                    {
+                        direction = -1;
+                        Rotate();
+                    }
+                    else if (direction == -1 && transform.position.x <= startPositionX - moveRange)
+                    {
+                        direction = 1;
+                        Rotate();
+                    }
+                }
             }
             else
             {
-                Attack();
-            }
-        }
-    }
-
-    public int Points()
-    {
-        return points;
-    }
-
-    public void CheckDirection()
-    {
-        if(!triggered)
-        {
-            if (isMovingRight)
-            {
-                if (direction == 1 && transform.position.x >= startPositionX + moveRange)
+                if (direction == 1 && pathfinding.Direction.x < 0f)
                 {
                     direction = -1;
                     Rotate();
                 }
-                else if (direction == -1 && transform.position.x <= startPositionX)
+                else if (direction == -1 && pathfinding.Direction.x > 0f)
                 {
                     direction = 1;
                     Rotate();
+                }
+                else if (pathfinding.Direction.x == 0.0f)
+                {
+
                 }
             }
-            else
+
+        }
+
+        private void OnTriggerEnter2D(Collider2D collision) //vision trigger
+        {
+            if (collision.CompareTag("Player"))
             {
-                if (direction == 1 && transform.position.x >= startPositionX)
-                {
-                    direction = -1;
-                    Rotate();
-                }
-                else if (direction == -1 && transform.position.x <= startPositionX - moveRange)
-                {
-                    direction = 1;
-                    Rotate();
-                }
+                TriggerEnemy();
             }
         }
-        else
+
+        private bool CanAttack()
         {
-            if(direction == 1 && pathfinding.Direction.x < 0f)
+            return !cooldownTimer.IsActive() && pathfinding.OnAttackDistance && pathfinding.AboveTarget() && !dead;
+        }
+
+        public void TriggerEnemy()
+        {
+            if (!triggered)
+            {
+                pathfinding.Activate();
+                triggered = true;
+                healthCanvas.enabled = true;
+                animator.SetBool("isActive", true);
+            }
+        }
+
+        private void Attack()
+        {
+            if (transform.position.x > player.transform.position.x
+                && transform.localScale.x > 0.0f)
             {
                 direction = -1;
                 Rotate();
             }
-            else if(direction == -1 && pathfinding.Direction.x > 0f)
+            else if (transform.position.x < player.transform.position.x
+                && transform.localScale.x < 0.0f)
             {
                 direction = 1;
                 Rotate();
             }
-            else if (pathfinding.Direction.x == 0.0f)
+            if (attackType == AttackType.Melee)
             {
+                if (damageType == DamageType.Descrete)
+                {
+                    playerStats.ChangeHP(-damage);
+                }
+                else if (damageType == DamageType.Continuous)
+                {
+                    StatsEffect.AddEffect(player, StatType.HEALTH, -damage, damageDuration);
+                }
+            }
+            else if (attackType == AttackType.Range)
+            {
+                GameObject projectile;
+                Vector3 shotPosition = shotPoint.transform.position;
+                float angle = CalculateAngle();
 
+                projectile = Instantiate(projectilePrefab, shotPosition, Quaternion.identity);
+                projectile.transform.eulerAngles = new Vector3(0f, 0f, angle);
+                projectile.GetComponent<Projectile>().SetProjectile(angle);
+            }
+            cooldownTimer.Activate();
+        }
+
+        private void KillEnemy()
+        {
+            if (!dead)
+            {
+                dead = true;
+                GetComponent<Collider2D>().enabled = false;
+                animator.SetBool("isDead", true);
+                healthCanvas.enabled = false;
+                moving.Speed = 0.0f;
+                StartCoroutine(KillOnAnimationEnd());
+                GameManager.instance.IncreaseEnemiesKilled();
+                GameManager.instance.IncreaseScore(points);
+                if (gameObject.GetComponent<AudioSource>() != null)
+                {
+                    gameObject.GetComponent<AudioSource>().Play();
+                }
             }
         }
 
-    }
-
-    private void OnTriggerEnter2D(Collider2D collision) //vision trigger
-    {
-        if (collision.CompareTag("Player"))
+        IEnumerator KillOnAnimationEnd()
         {
-            TriggerEnemy();
+            yield return new WaitForSeconds(0.7f);
+            gameObject.SetActive(false);
+            Destroy(gameObject, 5.0f);
         }
-    }
 
-    private bool CanAttack()
-    {
-        return !cooldownTimer.IsActive() && pathfinding.OnAttackDistance && pathfinding.AboveTarget() && !dead;
-    }
+        private void Rotate()
+        {
+            scale.x *= -1;
+            transform.localScale = scale;
 
-    public void TriggerEnemy()
-    {
-        if(!triggered)
-        {
-            pathfinding.Activate();
-            triggered = true;
-            healthCanvas.enabled = true;
-            animator.SetBool("isActive", true);
+            healthSliderScale.x *= -1;
+            healthSlider.transform.localScale = healthSliderScale;
         }
-    }
 
-    private void Attack()
-    {
-        if (transform.position.x > player.transform.position.x
-            && transform.localScale.x > 0.0f)
+        private float CalculateAngle()
         {
-            direction = -1;
-            Rotate();
-        }
-        else if (transform.position.x < player.transform.position.x
-            && transform.localScale.x < 0.0f)
-        {
-            direction = 1;
-            Rotate();
-        }
-        if (attackType == AttackType.Melee)
-        {
-            if(damageType == DamageType.Descrete)
+            float xDistance, yDistance, distance, cosin, radians, angle;
+
+            xDistance = shotPoint.transform.position.x - player.transform.position.x;
+            yDistance = shotPoint.transform.position.y - player.transform.position.y;
+            distance = Mathf.Sqrt((xDistance * xDistance) + (yDistance * yDistance));
+
+            cosin = xDistance / distance;
+            radians = Mathf.Acos(cosin);
+            angle = radians * Mathf.Rad2Deg;
+
+            if (yDistance < 0)
             {
-                playerStats.ChangeHP(-damage);
+                angle *= -1;
             }
-            else if(damageType == DamageType.Continuous)
+
+            angle -= 180.0f;
+
+            return angle;
+        }
+
+        public void OnAttackEnd()
+        {
+            animator.SetBool("isAttacking", false);
+        }
+
+        public void AttackOnAnim()
+        {
+            if (CanAttack())
             {
-                StatsEffect.AddEffect(player, StatType.HEALTH, -damage, damageDuration);
+                Attack();
             }
-        }
-        else if(attackType == AttackType.Range)
-        {
-            GameObject projectile;
-            Vector3 shotPosition = shotPoint.transform.position;
-            float angle = CalculateAngle();
-
-            projectile = Instantiate(projectilePrefab, shotPosition, Quaternion.identity);
-            projectile.transform.eulerAngles = new Vector3(0f, 0f, angle);
-            projectile.GetComponent<Projectile>().SetProjectile(angle);
-        }
-        cooldownTimer.Activate();
-    }
-
-    private void KillEnemy()
-    {
-        if(!dead)
-        {
-            dead = true;
-            GetComponent<Collider2D>().enabled = false;
-            animator.SetBool("isDead", true);
-            healthCanvas.enabled = false;
-            moving.Speed = 0.0f;
-            StartCoroutine(KillOnAnimationEnd());
-            GameManager.instance.IncreaseEnemiesKilled();
-            GameManager.instance.IncreaseScore(points);
-            if(gameObject.GetComponent<AudioSource>() != null)
-            {
-                gameObject.GetComponent<AudioSource>().Play();
-            }
-        }
-    }
-
-    IEnumerator KillOnAnimationEnd()
-    {
-        yield return new WaitForSeconds(0.7f);
-        gameObject.SetActive(false);
-        Destroy(gameObject, 5.0f);
-    }
-
-    private void Rotate()
-    {
-        scale.x *= -1;
-        transform.localScale = scale;
-
-        healthSliderScale.x *= -1;
-        healthSlider.transform.localScale = healthSliderScale;
-    }
-
-    private float CalculateAngle()
-    {
-        float xDistance, yDistance, distance, cosin, radians, angle;
-
-        xDistance = shotPoint.transform.position.x - player.transform.position.x;
-        yDistance = shotPoint.transform.position.y - player.transform.position.y;
-        distance = Mathf.Sqrt((xDistance * xDistance) + (yDistance * yDistance));
-
-        cosin = xDistance / distance;
-        radians = Mathf.Acos(cosin);
-        angle = radians * Mathf.Rad2Deg;
-
-        if (yDistance < 0)
-        {
-            angle *= -1;
-        }
-
-        angle -= 180.0f;
-
-        return angle;
-    }
-
-    public void OnAttackEnd()
-    {
-        animator.SetBool("isAttacking", false);
-    }
-
-    public void AttackOnAnim()
-    {
-        if(CanAttack())
-        {
-            Attack();
         }
     }
 }

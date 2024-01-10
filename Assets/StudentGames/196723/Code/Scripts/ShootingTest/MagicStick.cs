@@ -2,57 +2,60 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class MagicStick : MonoBehaviour
+namespace _196723
 {
-    [SerializeField]
-    private GameObject player;
-    private Vector3 playerScale;
-    private bool playerFacingRight = true;
-
-    private StatsContainer statsContainer;
-
-    [SerializeField]
-    private Transform shootPoint;
-
-    private MouseData mouseData;
-
-    private void Start()
+    public class MagicStick : MonoBehaviour
     {
-        statsContainer = player.GetComponent<StatsContainer>();
-        mouseData = gameObject.AddComponent<MouseData>();
-        mouseData.SetTransform(transform);
+        [SerializeField]
+        private GameObject player;
+        private Vector3 playerScale;
+        private bool playerFacingRight = true;
 
-        playerScale = player.transform.localScale;
-    }
+        private StatsContainer statsContainer;
 
-    private void Update()
-    {
-        RotateStick();
-    }
+        [SerializeField]
+        private Transform shootPoint;
 
-    private void RotateStick()
-    {
-        float angle = mouseData.Angle(), stickAngle = angle;
-        if(!playerFacingRight)
+        private MouseData mouseData;
+
+        private void Start()
         {
-            stickAngle -= 180.0f;
-        }
-        gameObject.transform.eulerAngles = new Vector3(0f, 0f, stickAngle);
-        if ((angle > 90.0f || angle < -90.0f) && playerFacingRight)
-        {
-            RotatePlayer();
-            playerFacingRight = false;
-        }
-        else if ((angle <= 90.0f && angle >= -90.0f) && !playerFacingRight)
-        {
-            RotatePlayer();
-            playerFacingRight = true;
-        }
-    }
+            statsContainer = player.GetComponent<StatsContainer>();
+            mouseData = gameObject.AddComponent<MouseData>();
+            mouseData.SetTransform(transform);
 
-    private void RotatePlayer()
-    {
-        playerScale.x *= -1;
-        player.transform.localScale = playerScale;
+            playerScale = player.transform.localScale;
+        }
+
+        private void Update()
+        {
+            RotateStick();
+        }
+
+        private void RotateStick()
+        {
+            float angle = mouseData.Angle(), stickAngle = angle;
+            if (!playerFacingRight)
+            {
+                stickAngle -= 180.0f;
+            }
+            gameObject.transform.eulerAngles = new Vector3(0f, 0f, stickAngle);
+            if ((angle > 90.0f || angle < -90.0f) && playerFacingRight)
+            {
+                RotatePlayer();
+                playerFacingRight = false;
+            }
+            else if ((angle <= 90.0f && angle >= -90.0f) && !playerFacingRight)
+            {
+                RotatePlayer();
+                playerFacingRight = true;
+            }
+        }
+
+        private void RotatePlayer()
+        {
+            playerScale.x *= -1;
+            player.transform.localScale = playerScale;
+        }
     }
 }

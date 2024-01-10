@@ -2,30 +2,34 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class Moving : MonoBehaviour
+namespace _196723
 {
-    [SerializeField]
-    private float speed;
-
-    public float Speed
+    public class Moving : MonoBehaviour
     {
-        get
+        [SerializeField]
+        private float speed;
+
+        public float Speed
         {
-            return speed;
+            get
+            {
+                return speed;
+            }
+            set
+            {
+                speed = value;
+            }
         }
-        set
+
+        public void SpeedUp(float ratio)
         {
-            speed = value;
+            speed *= ratio;
+        }
+
+        public void SlowDown(float ratio)
+        {
+            speed /= ratio;
         }
     }
 
-    public void SpeedUp(float ratio)
-    {
-        speed *= ratio;
-    }
-
-    public void SlowDown(float ratio)
-    {
-        speed /= ratio;
-    }
 }

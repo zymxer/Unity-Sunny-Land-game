@@ -3,30 +3,21 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
-public class MainMenu : MonoBehaviour
+namespace _196723
 {
-    // Start is called before the first frame update
-    void Start()
+    public class MainMenu : MonoBehaviour
     {
-        
-    }
+        public void OnLevel1Pressed()
+        {
+            SceneManager.LoadSceneAsync("196723");
+        }
 
-    // Update is called once per frame
-    void Update()
-    {
-        
-    }
-
-    public void OnLevel1Pressed()
-    {
-        SceneManager.LoadSceneAsync("Level1");
-    }
-
-    public void OnExitPressed()
-    {
+        public void OnExitPressed()
+        {
 #if UNITY_EDITOR
-        UnityEditor.EditorApplication.isPlaying = false;
+            UnityEditor.EditorApplication.isPlaying = false;
 #endif
-        Application.Quit();
+            Application.Quit();
+        }
     }
 }
