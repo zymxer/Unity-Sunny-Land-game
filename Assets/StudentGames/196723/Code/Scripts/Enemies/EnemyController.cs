@@ -267,6 +267,10 @@ public class EnemyController : MonoBehaviour
             StartCoroutine(KillOnAnimationEnd());
             GameManager.instance.IncreaseEnemiesKilled();
             GameManager.instance.IncreaseScore(points);
+            if(gameObject.GetComponent<AudioSource>() != null)
+            {
+                gameObject.GetComponent<AudioSource>().Play();
+            }
         }
     }
 

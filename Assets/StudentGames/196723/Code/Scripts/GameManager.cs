@@ -20,7 +20,7 @@ public class GameManager : MonoBehaviour
     [SerializeField]
     private Transform lastCheckpoint;
 
-    const string keyHighScore = "HighScoreLevel1";
+    const string keyHighScore = "HighScore196723";
 
     private StatsContainer playerStats;
 
@@ -200,16 +200,7 @@ public class GameManager : MonoBehaviour
 
         if (currentGameState == GameState.GS_LEVELCOMPLETED)
         {
-            Scene currentScene = SceneManager.GetActiveScene();
-            int highScore = PlayerPrefs.GetInt(keyHighScore);
-            if (currentScene.name == "Level1")
-            {
-                //if(highScore < ScoreController.GetController().GetScore())
-                //{
-                //    highScore = ScoreController.GetController().GetScore();
-                //    PlayerPrefs.SetInt(keyHighScore, highScore);
-                //}
-            }
+
         }
         if(currentGameState == GameState.GS_GAME)
         {
@@ -224,6 +215,14 @@ public class GameManager : MonoBehaviour
             SpellsController.instance.StopContinuousSpell();
             SpellsController.instance.enabled = false;
             Time.timeScale = 0.0f;
+        }
+    }
+
+    public void CheckKeysFound()
+    {
+        if(keysFound >= 3)
+        {
+            LevelCompleted();
         }
     }
 
@@ -245,9 +244,18 @@ public class GameManager : MonoBehaviour
     public void LevelCompleted()
     {
         SetGameState(GameState.GS_LEVELCOMPLETED);
+        score += lives * 100;
+        int highScore = PlayerPrefs.GetInt(keyHighScore);
+        if (highScore < score)
+        {
+            highScore = score;
+            PlayerPrefs.SetInt(keyHighScore, highScore);
+        }
+        gameplayUI.UpdateScoreResult(score, highScore);
     }
     public void GameOver()
     {
+        GetComponent<AudioSource>().Play();
         SetGameState(GameState.GS_GAME_OVER);
     }
 

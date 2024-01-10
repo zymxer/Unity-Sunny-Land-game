@@ -63,7 +63,7 @@ public class SpellsController : MonoBehaviour
             ScrollSpellDown();
             GameplayUI.instance.UpdateSpellImages();
         }
-        else if(Input.GetMouseButtonDown(0))
+        else if(Input.GetMouseButtonDown(0) || Input.GetKeyDown(KeyCode.C))
         {
             if (CanCast())
             {
@@ -92,7 +92,7 @@ public class SpellsController : MonoBehaviour
             }
         }
 
-        else if(Input.GetMouseButtonUp(0) || playerStats.Mana == 0.0f)
+        else if(Input.GetMouseButtonUp(0) || playerStats.Mana == 0.0f || Input.GetKeyUp(KeyCode.C))
         {
             StopContinuousSpell();
         }

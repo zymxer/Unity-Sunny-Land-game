@@ -171,14 +171,10 @@ public class PlayerPhysics : MonoBehaviour
                 transform.SetParent(platform.transform);
             }
         }
-        //if(collision.CompareTag("LevelEnd"))
-        //{
-        //    if (keysFound == keysAmount)
-        //    {
-        //        ScoreController.GetController().IncreaseScore(100 * lives);
-        //        GameManager.instance.LevelCompleted();
-        //    }
-        //}
+        if (collision.CompareTag("LevelEnd"))
+        {
+            GameManager.instance.CheckKeysFound();
+        }
 
 
         if (collision.CompareTag("Key"))

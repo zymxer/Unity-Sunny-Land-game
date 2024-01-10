@@ -61,6 +61,13 @@ public class GameplayUI : MonoBehaviour
     [SerializeField]
     private Slider volumeSlider;
 
+    [Header("Level End")]
+    [Space(10)]
+    [SerializeField]
+    private TMP_Text scoreResultText;
+    [SerializeField]
+    private TMP_Text bestScoreText;
+
     public static GameplayUI instance = null;
 
     private Image selectedSpellImage;
@@ -127,6 +134,11 @@ public class GameplayUI : MonoBehaviour
         }
     }
 
+    public void UpdateScoreResult(int score, int bestScore)
+    {
+        scoreResultText.text = "Your score = " + score;
+        bestScoreText.text = "The best score = " + bestScore;
+    }
 
     public void UpdateScore(int value)
     {
