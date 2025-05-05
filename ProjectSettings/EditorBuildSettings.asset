@@ -6,9 +6,9 @@ EditorBuildSettings:
   serializedVersion: 2
   m_Scenes:
   - enabled: 1
-    path: Assets/StudentGames/196723/Level/Prefabs/Scenes/MainMenu.unity
+    path: Assets/Scenes/MainMenu.unity
     guid: a86eef44d7707dd4d8ea772ac47f3d18
   - enabled: 1
-    path: Assets/StudentGames/196723/Level/Prefabs/Scenes/196723.unity
+    path: Assets/Scenes/Game.unity
     guid: 16c4299898de51e45a4745fa50bae484
   m_configObjects: {}
